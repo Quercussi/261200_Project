@@ -1,7 +1,8 @@
 package parsers;
 
 public class Tokenizer {
-    private String src, nextToken = "";
+    private final String src;
+    private String nextToken = "";
     private int pos = 0;
 
     /** Create a Tokenizer from input string
@@ -32,10 +33,10 @@ public class Tokenizer {
             while( (++pos < src.length()) && Character.isDigit( nextChar = src.charAt(pos) ) );
         }
 
-        // Check for strings
-        if(Character.isLetter(nextChar)) {
+        // Check for identifiers
+        else if(Character.isLetter(nextChar)) {
             do { s.append(nextChar); }
-            while( (++pos < src.length()) && Character.isLetterOrDigit( nextChar = src.charAt(pos) ) );
+            while( (++pos < src.length()) && (Identifier.isIdentifierChar( nextChar = src.charAt(pos) )));
         }
 
         // Check for operator or parenthesis
@@ -45,7 +46,7 @@ public class Tokenizer {
         }
 
         // LexicalError
-        else throw new SyntaxError("unknown character: " + nextChar);
+        else throw new SyntaxError("Unknown character: " + nextChar);
 
         nextToken = s.toString();
     }
@@ -79,7 +80,7 @@ public class Tokenizer {
      * @return current token
      * */
     public String consume() throws SyntaxError {
-        if(!hasNextToken()) throw new SyntaxError("no more tokens");
+        if(!hasNextToken()) throw new SyntaxError("No more tokens");
         String result = nextToken;
         getNextToken();
 
@@ -93,7 +94,7 @@ public class Tokenizer {
      * */
     public void consume(String s) throws SyntaxError{
         if(peek(s)){ consume(); }
-        else throw new SyntaxError("malformed expression");
+        else throw new SyntaxError("Malformed expression: " + s);
     }
 
     /** Check whether the input character is an operator
@@ -103,6 +104,6 @@ public class Tokenizer {
     static private boolean isOperator(char c) {
         return (c == '+' || c == '-' || c == '*' || c == '/'
                 || c == '%' || c == '(' || c == ')' || c == '{'
-                || c == '}' || c == '^');
+                || c == '}' || c == '^' || c == '=');
     }
 }
