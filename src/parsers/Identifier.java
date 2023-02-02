@@ -36,6 +36,7 @@ public class Identifier implements Expression{
     public static boolean isIdentifierChar(char ch) {
         return Character.isLetterOrDigit(ch) || ch == '_' || ch == '$';
     }
+    // We allow underscore ('_') and dollar sign ('$') for naming identifier.
 
     public static Set<String> reservedWords = Set.of("collect","done","down",
             "downleft","downright","else","if","invest","move","nearby","opponent",

@@ -4,6 +4,7 @@ public class Tokenizer {
     private final String src;
     private String nextToken = "";
     private int pos = 0;
+    private int line = 1;
 
     /** Create a Tokenizer from input string
      * @param src input string to be tokenized
@@ -18,7 +19,8 @@ public class Tokenizer {
      * */
     private void getNextToken() throws SyntaxError {
         StringBuilder s = new StringBuilder();
-        for(; pos < src.length() && Character.isSpaceChar(src.charAt(pos)); pos++);
+
+        eatVacuumSyntax();
 
         if(pos == src.length()) {
             nextToken = null;
@@ -30,13 +32,13 @@ public class Tokenizer {
         // Check for numbers
         if(Character.isDigit(nextChar)) {
             do { s.append(nextChar); }
-            while( (++pos < src.length()) && Character.isDigit( nextChar = src.charAt(pos) ) );
+            while( (++pos < src.length()) && Character.isDigit(nextChar = src.charAt(pos)) );
         }
 
         // Check for identifiers
         else if(Character.isLetter(nextChar)) {
             do { s.append(nextChar); }
-            while( (++pos < src.length()) && (Identifier.isIdentifierChar( nextChar = src.charAt(pos) )));
+            while( (++pos < src.length()) && Identifier.isIdentifierChar(nextChar = src.charAt(pos)) );
         }
 
         // Check for operator or parenthesis
@@ -46,9 +48,26 @@ public class Tokenizer {
         }
 
         // LexicalError
-        else throw new SyntaxError("Unknown character: " + nextChar);
+        else throw new SyntaxError("Unknown character: " + nextChar + " at line " + line);
 
         nextToken = s.toString();
+    }
+
+    private void eatVacuumSyntax() {
+        for(; pos < src.length(); pos++){
+            char ptrChar = src.charAt(pos);
+            if(ptrChar == '#')
+                eatComment();
+            else if(ptrChar == '\n' || ptrChar == '\r')
+                line++;
+            else if (!Character.isWhitespace(ptrChar))
+                return;
+        }
+    }
+
+    private void eatComment() {
+        pos = Integer.min(src.indexOf('\n',pos) , src.indexOf('\r',pos));
+        line++;
     }
 
     /** Check if there is next token
@@ -61,7 +80,7 @@ public class Tokenizer {
      * @return the next token
      * */
     public String peek() throws SyntaxError {
-        if(!hasNextToken()) throw new SyntaxError("no more tokens");
+        if(!hasNextToken()) throw new SyntaxError("No more tokens");
         return nextToken;
     }
 
@@ -94,8 +113,13 @@ public class Tokenizer {
      * */
     public void consume(String s) throws SyntaxError{
         if(peek(s)){ consume(); }
-        else throw new SyntaxError("Malformed expression: " + s);
+        else throw new SyntaxError("Malformed expression: " + s + " at line " + line);
     }
+
+    /** Return the current line tokenizer is reading.
+     * @return current line
+     * */
+    public int getLine() { return line; }
 
     /** Check whether the input character is an operator
      * @param c is a character which to be checked
