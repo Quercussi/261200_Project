@@ -2,15 +2,13 @@ package parsers;
 
 import java.util.Map;
 
-public class AttackCmd implements Statement{
+public class MoveCmd implements Statement{
     private final Direction dir;
-    private final Expression expr;
 
-    AttackCmd(String command, Direction dir, Expression expr) throws SyntaxError {
-        if(!command.equals("shoot"))
+    public MoveCmd(String command, Direction dir) throws SyntaxError {
+        if(!command.equals("move"))
             throw new SyntaxError("Unknown command: " + command);
         this.dir = dir;
-        this.expr = expr;
     }
 
     public void execute(Map<String, Integer> bindings) throws SyntaxError {
