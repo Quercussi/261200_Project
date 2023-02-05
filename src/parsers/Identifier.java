@@ -10,7 +10,7 @@ public class Identifier implements Expression{
 
     public Identifier(String name) throws SyntaxError {
         if(!isLegalName(name))
-            throw new SyntaxError("Illegal name : " + name);
+            throw new SyntaxError("Illegal identifier name : " + name);
 
         this.name = name;
     }
@@ -19,7 +19,7 @@ public class Identifier implements Expression{
         if(bindings.containsKey(name))
             return bindings.get(name);
         else
-            throw new SyntaxError("Identifier hasn't been assigned : " + name);
+            throw new SyntaxError("Identifier hasn't been assigned: " + name);
     }
 
     private static final Pattern pattern = Pattern.compile("[a-zA-Z_$][\\w$]*");
@@ -37,6 +37,14 @@ public class Identifier implements Expression{
         return Character.isLetterOrDigit(ch) || ch == '_' || ch == '$';
     }
     // We allow underscore ('_') and dollar sign ('$') for naming identifier.
+
+    public static boolean isSpecialVariable(String name){
+        return name.equals("rows") || name.equals("cols") ||
+                name.equals("currow") || name.equals("curcol") ||
+                name.equals("budget") || name.equals("deposit") ||
+                name.equals("int") || name.equals("maxdeposit") ||
+                name.equals("random");
+    }
 
     public static Set<String> reservedWords = Set.of("collect","done","down",
             "downleft","downright","else","if","invest","move","nearby","opponent",

@@ -27,7 +27,11 @@ public class StatementParser {
         Statement stm;
         String token = tkn.consume();
         if(token.isEmpty() || !Character.isLetter(token.charAt(0)))
-            throw new SyntaxError("Unknown command: " + token + " at line " + tkn.getLine());
+            throw new SyntaxError(new StringBuilder("Unknown command: ")
+                    .append(token)
+                    .append(" at line ")
+                    .append(tkn.getLine())
+                    .toString());
 
         switch (token) {
             case "done","relocate" -> stm = new ActionCmd(token);
@@ -42,7 +46,6 @@ public class StatementParser {
     }
 
     private Statement parseMoveCmd(String command) throws SyntaxError {
-        // MoveCommand
         Direction dir = parseDirection();
         return new MoveCmd(command, dir);
     }
@@ -61,7 +64,13 @@ public class StatementParser {
     private Statement parseAssignStatement(String identifier) throws SyntaxError {
         tkn.consume("=");
         Expression expr = parseExpression();
-        return new AssignStatement(identifier, expr);
+        try { return new AssignStatement(identifier, expr); }
+        catch (SyntaxError e) {
+            throw new SyntaxError(new StringBuilder(e.getMessage())
+                    .append(" at line ")
+                    .append(tkn.getLine())
+                    .toString());
+        }
     }
 
     private Expression parseExpression() {
@@ -74,7 +83,11 @@ public class StatementParser {
         switch (command) {
             case "opponent" -> expr = new OpponentExpr(command);
             case "nearby" -> expr = new NearbyExpr(command, parseDirection());
-            default -> throw new SyntaxError("Unknown command " + command + " at line " + tkn.getLine());
+            default -> throw new SyntaxError(new StringBuilder("Unknown command: ")
+                    .append(command)
+                    .append(" at line ")
+                    .append(tkn.getLine())
+                    .toString());
         }
         return expr;
     }
