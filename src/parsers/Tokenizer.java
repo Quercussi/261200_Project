@@ -48,7 +48,7 @@ public class Tokenizer {
         }
 
         // LexicalError
-        else throw new SyntaxError("Unknown character: " + nextChar + " at line " + line);
+        else throw new SyntaxError("Unknown character: " + nextChar, line);
 
         nextToken = s.toString();
     }
@@ -80,7 +80,7 @@ public class Tokenizer {
      * @return the next token
      * */
     public String peek() throws SyntaxError {
-        if(!hasNextToken()) throw new SyntaxError("No more tokens");
+        if(!hasNextToken()) throw new SyntaxError("No more tokens", line);
         return nextToken;
     }
 
@@ -99,7 +99,7 @@ public class Tokenizer {
      * @return current token
      * */
     public String consume() throws SyntaxError {
-        if(!hasNextToken()) throw new SyntaxError("No more tokens");
+        if(!hasNextToken()) throw new SyntaxError("No more tokens", line);
         String result = nextToken;
         getNextToken();
 
@@ -113,7 +113,7 @@ public class Tokenizer {
      * */
     public void consume(String s) throws SyntaxError{
         if(peek(s)){ consume(); }
-        else throw new SyntaxError("Malformed expression: " + s + " at line " + line);
+        else throw new SyntaxError("Malformed expression: " + s, line);
     }
 
     /** Return the current line tokenizer is reading.

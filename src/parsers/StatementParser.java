@@ -1,5 +1,6 @@
 package parsers;
 
+import java.util.LinkedList;
 import java.util.Map;
 
 public class StatementParser {
@@ -12,7 +13,7 @@ public class StatementParser {
      * */
     public StatementParser(String src) throws SyntaxError {
         tkn = new Tokenizer(src);
-        stm = parseStatement();
+        stm = parseConstructionPlan();
     }
 
     /** Executes the statement
@@ -23,15 +24,19 @@ public class StatementParser {
         stm.execute(bindings);
     }
 
+    private Statement parseConstructionPlan() throws SyntaxError {
+        LinkedList<Statement> stmList = new LinkedList<>();
+        do stmList.add(parseStatement());
+        while (tkn.hasNextToken());
+
+        return new ConstructionPlan(stmList);
+    }
+
     private Statement parseStatement() throws SyntaxError {
         Statement stm;
         String token = tkn.consume();
         if(token.isEmpty() || !Character.isLetter(token.charAt(0)))
-            throw new SyntaxError(new StringBuilder("Unknown command: ")
-                    .append(token)
-                    .append(" at line ")
-                    .append(tkn.getLine())
-                    .toString());
+            throw new SyntaxError("Unknown command: " + token, tkn.getLine());
 
         switch (token) {
             case "done","relocate" -> stm = new ActionCmd(token);
@@ -66,10 +71,7 @@ public class StatementParser {
         Expression expr = parseExpression();
         try { return new AssignStatement(identifier, expr); }
         catch (SyntaxError e) {
-            throw new SyntaxError(new StringBuilder(e.getMessage())
-                    .append(" at line ")
-                    .append(tkn.getLine())
-                    .toString());
+            throw new SyntaxError(e.getMessage(), tkn.getLine());
         }
     }
 
@@ -83,11 +85,7 @@ public class StatementParser {
         switch (command) {
             case "opponent" -> expr = new OpponentExpr(command);
             case "nearby" -> expr = new NearbyExpr(command, parseDirection());
-            default -> throw new SyntaxError(new StringBuilder("Unknown command: ")
-                    .append(command)
-                    .append(" at line ")
-                    .append(tkn.getLine())
-                    .toString());
+            default -> throw new SyntaxError("Unknown command: " + command, tkn.getLine());
         }
         return expr;
     }

@@ -8,10 +8,15 @@ public class RegionCmd implements Statement{
     private final Expression expr;
     private final RegionCmdOperation command;
 
+    /** Create a region command
+     * @param command is either "invest" or "collect"
+     * @param expr is not null
+     * @throws SyntaxError if command is neither "invest" nor "collect".
+     */
     public RegionCmd(String command, Expression expr) throws SyntaxError {
         try { this.command = RegionCmdOperation.valueOf(command); }
         catch (IllegalArgumentException | NullPointerException e) {
-            throw new SyntaxError("Unknown command: " + command);
+            throw new SyntaxError("Unknown command: " + command, null);
         }
         this.expr = expr;
     }
