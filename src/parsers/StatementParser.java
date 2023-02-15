@@ -31,7 +31,16 @@ public class StatementParser {
 
         return new ConstructionPlan(stmList);
     }
-
+    
+    private boolean isNumber(String s){
+        try{
+            Integer.parseInt(s) ;
+            return true ;
+        }catch (NumberFormatException e){
+            return false ;
+        }
+    }
+    
     private Statement parseStatement() throws SyntaxError {
         Statement stm;
         String token = tkn.consume();
@@ -79,35 +88,35 @@ public class StatementParser {
     }
 
     private Expression parseExpression() throws SyntaxError{
-        Expression e =  parseTerm() ;
+        Expression term =  parseTerm() ;
         while (tkn.peek("+") || tkn.peek("-")){
             String operator = tkn.consume() ;
             switch (operator){
-                case "+","-" -> e = new BinaryArithExpr(e,operator,parseTerm()) ;
+                case "+","-" -> term = new BinaryArithExpr(term,operator,parseTerm()) ;
             }
         }
 
-        return e ;
+        return term ;
     }
 
     private Expression parseTerm() throws SyntaxError{
-        Expression e = parseFactor() ;
+        Expression factor = parseFactor() ;
         while (tkn.peek("*") || tkn.peek("/") || tkn.peek("%")){
             String operator = tkn.consume() ;
             switch (operator){
-                case "*","/","%" -> e = new BinaryArithExpr(e,operator,parseFactor()) ;
+                case "*","/","%" -> factor = new BinaryArithExpr(factor,operator,parseFactor()) ;
             }
         }
-        return e ;
+        return factor ;
     }
 
     private Expression parseFactor() throws SyntaxError{
-        Expression e = parsePower() ;
+        Expression power = parsePower() ;
         while (tkn.peek("^")){
             String operator = tkn.consume();
-            e = new BinaryArithExpr(e,operator,parsePower()) ;
+            power = new BinaryArithExpr(power,operator,parseFactor()) ;
         }
-        return  e ;
+        return  power ;
     }
 
     private Expression parsePower() throws SyntaxError{
@@ -146,7 +155,7 @@ public class StatementParser {
 
     private BlockStatement parseBlockStatement() throws SyntaxError {
         tkn.consume("{") ;
-        LinkedList<Statement> l = new LinkedList<>() ;
+        Collection<Statement> l = new LinkedList<>() ;
         while(!tkn.peek("}")){
             l.add(parseStatement()) ;
         }
@@ -168,7 +177,9 @@ public class StatementParser {
     }
     private WhileStatement parseWhileStatement() throws SyntaxError{
         tkn.consume("while") ;
+        tkn.consume("(") ;
         Expression expr = parseExpression() ;
+        tkn.consume(")") ;
         Statement statement = parseStatement() ;
 
         return new WhileStatement(expr,statement) ;
