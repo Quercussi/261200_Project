@@ -104,10 +104,11 @@ public class StatementParser {
 
     private Expression parseFactor() throws SyntaxError{
         Expression e = parsePower() ;
-        while (tkn.peek("^")){
+        if (tkn.peek("^")){
             String operator = tkn.consume();
-            e = new BinaryArithExpr(e,operator,parsePower()) ;
+            e = new BinaryArithExpr(e,operator,parseFactor()) ;
         }
+
         return  e ;
     }
 

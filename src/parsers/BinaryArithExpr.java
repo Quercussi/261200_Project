@@ -7,10 +7,12 @@ public class BinaryArithExpr implements Expression {
     private final Expression right;
     private final String operator;
 
-    public BinaryArithExpr(Expression left, String operator, Expression right) {
+    public BinaryArithExpr(Expression left, String operator, Expression right) throws SyntaxError {
         this.left = left;
         this.right = right;
         this.operator = operator;
+        if(!(operator.equals("+") || operator.equals("-") || operator.equals("*") || operator.equals("/") || operator.equals("%") || operator.equals("^")))
+            throw new SyntaxError("Unknown operator: " + operator, null);
     }
 
 
