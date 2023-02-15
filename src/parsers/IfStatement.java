@@ -13,6 +13,10 @@ public class IfStatement implements Statement{
     }
 
     public void execute(Map<String, Integer> bindings) throws SyntaxError {
-
+        if(expression.evaluate(bindings) > 0){
+            ifstatement.execute(bindings);
+        }else{
+            elsestatement.execute(bindings);
+        }
     }
 }
