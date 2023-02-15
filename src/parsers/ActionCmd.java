@@ -8,10 +8,14 @@ public class ActionCmd implements Statement{
 
     private final ActionCmdOperation command;
 
+    /** Create an action command
+     * @param command is either "done" or "relocate"
+     * @throws SyntaxError if command is neither "done" nor "relocate"
+     */
     public ActionCmd(String command) throws SyntaxError {
         try { this.command = ActionCmdOperation.valueOf(command); }
         catch (IllegalArgumentException | NullPointerException e) {
-            throw new SyntaxError("Unknown command: " + command);
+            throw new SyntaxError("Unknown command: " + command, null);
         }
     }
 
