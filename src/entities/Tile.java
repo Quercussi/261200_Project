@@ -2,26 +2,26 @@ package entities;
 
 import parsers.*;
 public class Tile implements Coordinated{
-    private final Player owner ;
+    private final CityCrew owner ;
 
     private final double deposit ;
 
     private final Position position ;
-    public Tile(Player owner,double deposit,Position position){
+    public Tile(CityCrew owner,double deposit,Position position){
         this.owner = owner ;
         this.deposit = deposit ;
         this.position = position ;
     }
 
-    public Player setOwner(){
+    public CityCrew setOwner(){
         return null ;
     }
 
-    public Player getOwner(){
+    public CityCrew getOwner(){
         return  null ;
     }
 
-    public boolean hasAdjacentTile(Player player){
+    public boolean hasAdjacentTile(CityCrew player){
         return  false ;
     }
 

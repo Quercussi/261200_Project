@@ -21,7 +21,7 @@ public class Territory {
 
     public Tile getTileAt(Position position){ return tile[position.getRow()][position.getCol()] ;}
 
-    public Tile getTileAt(Player player){
+    public Tile getTileAt(CityCrew cityCrew){
         return null ;
     }
 
