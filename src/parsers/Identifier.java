@@ -20,14 +20,14 @@ public class Identifier implements Expression{
     }
 
     public int evaluate(Map<String, Integer> bindings) throws SyntaxError {
-        if(bindings.containsKey(name)) {
-            if (bindings.get(name) < 0) {
-                throw new SyntaxError("Value must be Non-negative Number : " + name, null);
-            }
-            return bindings.get(name);
-        } else
-            throw new SyntaxError("Identifier hasn't been assigned: " + name, null);
+        if (!bindings.containsKey(name))
+            bindings.put(name, 0);
+
+        if (bindings.get(name) < 0) {
+            throw new SyntaxError("Value must be Non-negative Number : " + name, null);
         }
+        return bindings.get(name);
+    }
 
         private static final Pattern pattern = Pattern.compile("[a-zA-Z_$][\\w$]*");
         private static Matcher matcher;

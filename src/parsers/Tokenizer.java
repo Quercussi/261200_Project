@@ -58,7 +58,7 @@ public class Tokenizer {
             char ptrChar = src.charAt(pos);
             if(ptrChar == '#')
                 eatComment();
-            else if(ptrChar == '\n' || ptrChar == '\r')
+            else if(ptrChar == '\n')
                 line++;
             else if (!Character.isWhitespace(ptrChar))
                 return;
@@ -66,7 +66,7 @@ public class Tokenizer {
     }
 
     private void eatComment() {
-        pos = Integer.min(src.indexOf('\n',pos) , src.indexOf('\r',pos));
+        pos = src.indexOf('\n',pos);
         line++;
     }
 
@@ -125,7 +125,7 @@ public class Tokenizer {
      * @param c is a character which to be checked
      * @return whether the input character is an operator
      * */
-    static private boolean isOperator(char c) {
+    static public boolean isOperator(char c) {
         return (c == '+' || c == '-' || c == '*' || c == '/'
                 || c == '%' || c == '(' || c == ')' || c == '{'
                 || c == '}' || c == '^' || c == '=');

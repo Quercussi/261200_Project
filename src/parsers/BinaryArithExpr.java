@@ -24,7 +24,7 @@ public class BinaryArithExpr implements Expression {
             case "/" -> { return left_val / right_val; }
             case "%" -> { return left_val % right_val; }
             case "^" -> { return (int) Math.pow(left_val,right_val);}
-            default -> throw new SyntaxError("unknown operator: " + operator);
+            default -> throw new SyntaxError("unknown operator: " + operator, null);
         }
     }
 }

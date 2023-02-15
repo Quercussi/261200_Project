@@ -35,7 +35,9 @@ public class StatementParser {
     private Statement parseStatement() throws SyntaxError {
         Statement stm;
         String token = tkn.consume();
-        if(token.isEmpty() || !Character.isLetter(token.charAt(0)))
+        System.out.println(token);
+        char beginChar = token.charAt(0);
+        if(token.isEmpty() || !(Character.isLetter(beginChar) || Tokenizer.isOperator(beginChar) || beginChar == '_' || beginChar == '$'))
             throw new SyntaxError("Unknown command: " + token, tkn.getLine());
 
         switch (token) {
@@ -112,7 +114,7 @@ public class StatementParser {
 
     private Expression parsePower() throws SyntaxError{
         String nextToken = tkn.consume() ;
-        if(isNumber(nextToken)){
+        if(IntLit.isNumber(nextToken)){
             return new IntLit(Integer.parseInt(nextToken));
         }else if(Identifier.isLegalName(nextToken)){
             return new Identifier(nextToken) ;
@@ -123,7 +125,7 @@ public class StatementParser {
         }else if(nextToken.equals("opponent") || nextToken.equals("nearby")){
             return parseInfoExpression(nextToken) ;
         }
-        else throw new SyntaxError("Malformed expression: " + nextToken);
+        else throw new SyntaxError("Malformed expression: " + nextToken, tkn.getLine());
 
     }
 
@@ -145,7 +147,7 @@ public class StatementParser {
     }
 
     private BlockStatement parseBlockStatement() throws SyntaxError {
-        tkn.consume("{") ;
+        // tkn char is now {
         LinkedList<Statement> l = new LinkedList<>() ;
         while(!tkn.peek("}")){
             l.add(parseStatement()) ;
@@ -155,7 +157,7 @@ public class StatementParser {
     }
 
     private IfStatement parseIfStatement() throws SyntaxError{
-        tkn.consume("if") ;
+        // tkn char is now if
         tkn.consume("(") ;
         Expression expr = parseExpression() ;
         tkn.consume(")") ;
@@ -167,12 +169,10 @@ public class StatementParser {
         return new IfStatement(expr,ifstatement,elsestatement) ;
     }
     private WhileStatement parseWhileStatement() throws SyntaxError{
-        tkn.consume("while") ;
+        // tkn char is now while
         Expression expr = parseExpression() ;
         Statement statement = parseStatement() ;
 
         return new WhileStatement(expr,statement) ;
     }
-
-
 }

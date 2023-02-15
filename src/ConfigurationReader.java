@@ -9,10 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ConfigurationReader {
     private final Map<String,Integer> config;
@@ -37,8 +34,6 @@ public class ConfigurationReader {
 
         } catch (InvalidPathException | SecurityException | IOException | OutOfMemoryError e) { throw new MissingConfigurationFile(e.getMessage()); }
 
-        System.out.println(strConfig);
-
         return strConfig;
     }
 
@@ -55,7 +50,11 @@ public class ConfigurationReader {
         } catch (SyntaxError e) { throw new IllegalConfiguration(e.getMessage()); }
 
         Set<String> remainingKey = new HashSet<>(defaultConfigs);
-        remainingKey.removeAll(config.keySet());
+        Set<String> configKeys = config.keySet();
+        remainingKey.removeAll(configKeys);
+
+        for(String key : configKeys)
+            if(config.get(key) < 0) { throw new IllegalConfiguration("Value of " + key + " cannot be negative number."); }
 
         if(!remainingKey.isEmpty()) {
             StringBuilder missingVariableSB = new StringBuilder();
