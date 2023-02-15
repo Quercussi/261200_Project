@@ -16,9 +16,12 @@ public class Identifier implements Expression{
     }
 
     public int evaluate(Map<String, Integer> bindings) throws SyntaxError {
-        if(bindings.containsKey(name))
+        if(bindings.containsKey(name)) {
+            if (bindings.get(name) < 0) {
+                throw new SyntaxError("Value must be Nonnegative Number : " + name);
+            }
             return bindings.get(name);
-        else
+        }else
             throw new SyntaxError("Identifier hasn't been assigned : " + name);
     }
 
@@ -29,7 +32,7 @@ public class Identifier implements Expression{
 
         boolean isEmpty = name.isEmpty();
         boolean isReserved = reservedWords.contains(name);
-        boolean illegalGeneral = matcher.matches();
+        boolean illegalGeneral = !matcher.matches();
         return !(isEmpty || isReserved || illegalGeneral);
     }
 
