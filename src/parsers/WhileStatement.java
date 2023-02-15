@@ -12,6 +12,8 @@ public class WhileStatement implements Statement{
     }
 
     public void execute(Map<String,Integer> bindings) throws SyntaxError{
-
+        while (expression.evaluate(bindings) > 0){
+            statement.execute(bindings);
+        }
     }
 }

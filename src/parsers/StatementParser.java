@@ -35,7 +35,6 @@ public class StatementParser {
     private Statement parseStatement() throws SyntaxError {
         Statement stm;
         String token = tkn.consume();
-        System.out.println(token);
         char beginChar = token.charAt(0);
         if(token.isEmpty() || !(Character.isLetter(beginChar) || Tokenizer.isOperator(beginChar) || beginChar == '_' || beginChar == '$'))
             throw new SyntaxError("Unknown command: " + token, tkn.getLine());
@@ -147,7 +146,7 @@ public class StatementParser {
     }
 
     private BlockStatement parseBlockStatement() throws SyntaxError {
-        // tkn char is now {
+        // token character is now {
         LinkedList<Statement> l = new LinkedList<>() ;
         while(!tkn.peek("}")){
             l.add(parseStatement()) ;
@@ -157,7 +156,7 @@ public class StatementParser {
     }
 
     private IfStatement parseIfStatement() throws SyntaxError{
-        // tkn char is now if
+        // token character is now if
         tkn.consume("(") ;
         Expression expr = parseExpression() ;
         tkn.consume(")") ;
@@ -169,10 +168,12 @@ public class StatementParser {
         return new IfStatement(expr,ifstatement,elsestatement) ;
     }
     private WhileStatement parseWhileStatement() throws SyntaxError{
-        // tkn char is now while
+        // token character is now while
         Expression expr = parseExpression() ;
         Statement statement = parseStatement() ;
 
         return new WhileStatement(expr,statement) ;
     }
+
+
 }
