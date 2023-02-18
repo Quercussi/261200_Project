@@ -1,11 +1,10 @@
 package parsers;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.Map;
 
 public class BlockStatement implements Statement{
-    private Collection<Statement> list ;
+    private final Collection<Statement> list ;
 
     public BlockStatement(Collection<Statement> list){
         this.list = list ;
