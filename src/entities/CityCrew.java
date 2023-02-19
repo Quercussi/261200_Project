@@ -20,31 +20,16 @@ public class CityCrew implements Coordinated {
         this.construction_plan = construction_plan ;
     }
 
-    public void moveTo(){
-
-    }
+    public void moveTo(Direction Dir){ position.getPositionAt(Dir) ;}
 
     public void addTile(Tile tile){
-
+        ownedTiles.add(tile) ;
     }
 
     public void removeTile(Tile tile){
-
-    }
-
-    public int getRow(){ return position.getRow() ;}
-
-    public int getCol(){
-        return position.getCol() ;
+        ownedTiles.remove(tile) ;
     }
 
     public Position getPosition(){ return position.getPosition() ;}
 
-    public Position getPositionAt(Direction Dir){
-        return position.getPositionAt(Dir) ;
-    }
-
-    public int distanceTo(Coordinated coordinated){
-        return position.distanceTo(coordinated) ;
-    }
 }

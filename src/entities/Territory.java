@@ -21,15 +21,11 @@ public class Territory {
 
     public Tile getTileAt(Position position){ return tile[position.getRow()][position.getCol()] ;}
 
-    public Tile getTileAt(CityCrew cityCrew){
-        return null ;
-    }
+    public Tile getTileAt(CityCrew cityCrew){ return tile[cityCrew.getRow()][cityCrew.getCol()] ;}
 
     public Tile[][] getGraph(){ return tile ;}
 
-    public Coordinated getCrews(){
-        return null ;
-    }
+    public Collection<CityCrew> getCrews(){ return graph ;}
 
     public int getTurn(){
         return turn ;
