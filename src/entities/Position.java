@@ -12,4 +12,10 @@ public class Position implements Coordinated {
 
     public Position getPosition(){ return new Position(row,col) ;}
 
+    @Override
+    public int getRow() { return row; }
+
+    @Override
+    public int getCol() { return col; }
+
 }

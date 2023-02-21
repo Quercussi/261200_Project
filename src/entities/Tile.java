@@ -4,45 +4,37 @@ import parsers.*;
 public class Tile implements Coordinated{
     private CityCrew owner ;
 
-    private final double deposit ;
+    private double deposit ;
 
     private final Position position ;
-    public Tile(CityCrew owner,double deposit,Position position){
-        this.owner = owner ;
+    public Tile(double deposit,Position position){
+        this.owner = null ;
         this.deposit = deposit ;
         this.position = position ;
     }
 
-    public CityCrew setOwner(CityCrew player){
+    public void setOwner(CityCrew player){
         owner = player ;
-        return owner ;
     }
 
-    public CityCrew getOwner(){ return  owner ;}
-
-    public boolean hasAdjacentTile(CityCrew player) {
-        int rowplayer = player.getRow();
-        int colplayer = player.getCol();
-        int rowowner = owner.getRow();
-        int colowner = owner.getCol();
-
-        int nearbyY = Math.abs(rowowner - rowplayer);
-        int nearbyX = Math.abs(colowner - colplayer);
-
-        if(colowner % 2 == 0){
-            if(nearbyY == 1 && nearbyX == 1) return true; // upleft,upright,downleft,downright
-            if(nearbyY == 1 && nearbyX == 0) return true; // up,down
-        }else{
-            if(nearbyY == 0 && nearbyX == 1) return true; // upleft,upright
-            if(nearbyY == 1 && nearbyX == 0) return true ; // up,down
-            if(nearbyY == 1 && nearbyX == 1) return true; // downleft,downright
-        }
-
-        return false ;
-    }
+    public CityCrew getOwner(){ return owner ;}
+    public double getDeposit() { return deposit; }
+    public void withdraw(double withdraw) { this.deposit -= withdraw; }
+    public void deposit(double deposit) { this.deposit += deposit; }
 
     public Position getPosition(){
-        return position.getPosition() ;
+        return position ;
+    }
+
+    public void updateOwnership(CityCrew crew) {
+        if (deposit < 1) {
+            owner = null;
+            crew.removeTile(this);
+
+        } else if (owner == null) {
+            owner = crew;
+            crew.addTile(this);
+        }
     }
 
 
