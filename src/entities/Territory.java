@@ -1,33 +1,59 @@
 package entities;
 
 
+import parsers.StatementParser;
+import parsers.SyntaxError;
+
 import java.util.Collection;
+import java.util.Map;
 
 public class Territory {
-    private final int cols ;
-    private final int rows ;
-    private final Collection<CityCrew> graph ;
+    private Collection<CityCrew> crews ;
+    private final Tile[][] graph ;
+    private final Map<String,Long> config;
+    private int turn ;
 
-    private final Tile[][] tile ;
-    private final int turn ;
+    public Territory(Map<String,Long> config){
+        long rows = config.get("m");
+        long cols = config.get("n");
+        this.graph = new Tile[(int)rows][(int)cols];
+        this.crews = null;
+        this.config = config;
+        this.turn = 0;
 
-    public  Territory(int cols, int rows, Collection<CityCrew> graph, Tile[][] tile, int turn ){
-        this.cols = cols ;
-        this.rows = rows ;
-        this.graph = graph ;
-        this.tile = tile ;
-        this.turn = turn ;
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < cols; j++)
+                graph[i][j] = new Tile(0, new Position(i,j));
+        }
     }
 
-    public Tile getTileAt(Position position){ return tile[position.getRow()][position.getCol()] ;}
+    public Tile getTileAt(Coordinated position) {
+        int row = position.getRow();
+        int col = position.getCol();
 
-    public Tile getTileAt(CityCrew cityCrew){ return tile[cityCrew.getRow()][cityCrew.getCol()] ;}
+        if(row < 0 || row >= config.get("m") || col < 0 || col >= config.get("n"))
+            return null;
 
-    public Tile[][] getGraph(){ return tile ;}
+        return graph[position.getRow()][position.getCol()] ;
+    }
 
-    public Collection<CityCrew> getCrews(){ return graph ;}
+    public void execute(CityCrew crew) throws SyntaxError {
+        StatementParser sp = crew.getConstructionPlan();
+        sp.execute(crew.getBindings(), crew, this);
+    }
+
+    public Tile[][] getGraph(){ return graph ;}
+    public Collection<CityCrew> getCrews(){ return crews ;}
+    public void setCrews(Collection<CityCrew> crews) { this.crews = crews; }
+    public double getMaxDeposit() { return config.get("max_dep"); }
+    public long getRows() { return config.get("m"); }
+    public long getCols() {return config.get("n"); }
 
     public int getTurn(){
-        return turn ;
+        return turn;
     }
+    public void incrementTurn() { turn++; }
+
+    public double getInterestRate(Tile tile) { return config.get("interest_pct") * Math.log10(tile.getDeposit()) * Math.log(turn); }
+    public void addInterest(Tile tile) { tile.deposit(tile.getDeposit() * getInterestRate(tile) / 100); }
 }

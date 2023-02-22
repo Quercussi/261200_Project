@@ -1,6 +1,13 @@
 package parsers;
 
+import entities.CityCrew;
+import entities.Territory;
+import entities.Tile;
+
+import java.util.Arrays;
 import java.util.Map;
+
+import static parsers.Direction.*;
 
 public class OpponentExpr implements Expression {
 
@@ -12,7 +19,24 @@ public class OpponentExpr implements Expression {
         if(!command.equals("opponent"))
             throw new SyntaxError("Unknown command: " + command, null);
     }
-    public int evaluate(Map<String, Integer> bindings) throws SyntaxError {
+    public long evaluate(Map<String, Long> bindings, CityCrew crew, Territory territory) throws SyntaxError {
+        Tile[] currTile = new Tile[6];
+        Arrays.fill(currTile, territory.getTileAt(crew));
+
+        long maxIteration = Math.max(territory.getRows(),territory.getCols());
+        int distance = 0;
+        for(int k = 0; k < maxIteration; k++) {
+            distance++;
+            for(int i = 0; i < directions.length; i++) {
+                if(currTile[i] == null) continue;
+
+                currTile[i] = territory.getTileAt(currTile[i].getPositionAt(directions[i]));
+                if(currTile[i] != null && currTile[i].getOwner() != null && currTile[i].getOwner() != crew)
+                    return distance * 10L + i+1;
+            }
+        }
         return 0;
     }
+
+    static private final Direction[] directions = {up, upleft, downleft, down, downright, upright};
 }

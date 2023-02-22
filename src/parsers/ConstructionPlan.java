@@ -1,5 +1,8 @@
 package parsers;
 
+import entities.CityCrew;
+import entities.Territory;
+
 import java.util.Collection;
 import java.util.Map;
 
@@ -13,9 +16,15 @@ public class ConstructionPlan implements Statement{
         this.stmList = stmList;
     }
 
-    public void execute(Map<String, Integer> bindings) throws SyntaxError {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) throws SyntaxError {
         for(Statement stm : stmList){
-            stm.execute(bindings);
+            Long isDone = bindings.get("done");
+            if(isDone == null)
+                throw new SyntaxError("Missing bindings", null);
+            if(isDone != 0)
+                return;
+            
+            stm.execute(bindings, crew, territory);
         }
     }
 }

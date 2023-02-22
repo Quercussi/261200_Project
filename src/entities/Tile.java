@@ -1,49 +1,36 @@
 package entities;
 
-import parsers.*;
 public class Tile implements Coordinated{
     private CityCrew owner ;
 
-    private final double deposit ;
+    private double deposit ;
 
     private final Position position ;
-    public Tile(CityCrew owner,double deposit,Position position){
-        this.owner = owner ;
+    public Tile(double deposit,Position position){
+        this.owner = null ;
         this.deposit = deposit ;
         this.position = position ;
     }
 
-    public CityCrew setOwner(CityCrew player){
-        owner = player ;
-        return owner ;
-    }
+    public void setOwner(CityCrew player) { owner = player ; }
 
-    public CityCrew getOwner(){ return  owner ;}
+    public CityCrew getOwner(){ return owner ;}
+    public double getDeposit() { return deposit; }
+    public void withdraw(double withdraw) { this.deposit -= withdraw; }
+    public void deposit(double deposit) { this.deposit += deposit; }
 
-    public boolean hasAdjacentTile(CityCrew player) {
-        int rowplayer = player.getRow();
-        int colplayer = player.getCol();
-        int rowowner = owner.getRow();
-        int colowner = owner.getCol();
+    public Position getPosition() { return position ; }
 
-        int nearbyY = Math.abs(rowowner - rowplayer);
-        int nearbyX = Math.abs(colowner - colplayer);
+    public void updateOwnership(CityCrew crew) {
+        if (deposit < 1) {
+            setOwner(null);
+            if(crew != null)
+                crew.removeTile(this);
 
-        if(colowner % 2 == 0){
-            if(nearbyY == 1 && nearbyX == 1) return true; // upleft,upright,downleft,downright
-            if(nearbyY == 1 && nearbyX == 0) return true; // up,down
-        }else{
-            if(nearbyY == 0 && nearbyX == 1) return true; // upleft,upright
-            if(nearbyY == 1 && nearbyX == 0) return true ; // up,down
-            if(nearbyY == 1 && nearbyX == 1) return true; // downleft,downright
+        } else if (owner == null) {
+            setOwner(crew);
+            if(crew != null)
+                crew.addTile(this);
         }
-
-        return false ;
     }
-
-    public Position getPosition(){
-        return position.getPosition() ;
-    }
-
-
 }

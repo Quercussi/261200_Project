@@ -1,5 +1,8 @@
 package parsers;
 
+import entities.CityCrew;
+import entities.Territory;
+
 import java.util.Map;
 
 public class AssignStatement implements Statement{
@@ -19,10 +22,10 @@ public class AssignStatement implements Statement{
         this.expr = expr;
     }
 
-    public void execute(Map<String, Integer> bindings) throws SyntaxError {
-        if(Identifier.isSpecialVariable(name))
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) throws SyntaxError {
+        if(Identifier.isSpecialVariable(name) || Identifier.reservedWords.contains(name))
             return;
 
-        bindings.put(name, expr.evaluate(bindings));
+        bindings.put(name, expr.evaluate(bindings, crew, territory));
     }
 }
