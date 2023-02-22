@@ -5,7 +5,6 @@ import parsers.StatementParser;
 import parsers.SyntaxError;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Territory {
@@ -40,7 +39,7 @@ public class Territory {
 
     public void execute(CityCrew crew) throws SyntaxError {
         StatementParser sp = crew.getConstructionPlan();
-        //sp.execute(new HashMap<String,Long>(), crew, this);
+        sp.execute(crew.getBindings(), crew, this);
     }
 
     public Tile[][] getGraph(){ return graph ;}

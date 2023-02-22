@@ -1,6 +1,5 @@
 package entities;
 
-import parsers.*;
 public class Tile implements Coordinated{
     private CityCrew owner ;
 
@@ -13,29 +12,25 @@ public class Tile implements Coordinated{
         this.position = position ;
     }
 
-    public void setOwner(CityCrew player){
-        owner = player ;
-    }
+    public void setOwner(CityCrew player) { owner = player ; }
 
     public CityCrew getOwner(){ return owner ;}
     public double getDeposit() { return deposit; }
     public void withdraw(double withdraw) { this.deposit -= withdraw; }
     public void deposit(double deposit) { this.deposit += deposit; }
 
-    public Position getPosition(){
-        return position ;
-    }
+    public Position getPosition() { return position ; }
 
     public void updateOwnership(CityCrew crew) {
         if (deposit < 1) {
-            owner = null;
-            crew.removeTile(this);
+            setOwner(null);
+            if(crew != null)
+                crew.removeTile(this);
 
         } else if (owner == null) {
-            owner = crew;
-            crew.addTile(this);
+            setOwner(crew);
+            if(crew != null)
+                crew.addTile(this);
         }
     }
-
-
 }

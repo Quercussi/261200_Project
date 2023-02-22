@@ -1,6 +1,11 @@
 package parsers;
 
+import entities.CityCrew;
+import entities.Territory;
+import entities.Tile;
+
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,25 +24,38 @@ public class Identifier implements Expression{
         this.name = name;
     }
 
-    public int evaluate(Map<String, Integer> bindings) throws SyntaxError {
-        if (!bindings.containsKey(name))
-            bindings.put(name, 0);
+    public long evaluate(Map<String, Long> bindings, CityCrew crew, Territory territory) throws SyntaxError {
+        if (!bindings.containsKey(name) && !isSpecialVariable(name))
+            bindings.put(name, 0L);
 
-        if (bindings.get(name) < 0) {
-            throw new SyntaxError("Value must be Non-negative Number : " + name, null);
+        switch (name) {
+            case "rows" -> { return territory.getRows(); }
+            case "cols" -> { return territory.getCols(); }
+            case "currow" -> { return crew.getRow(); }
+            case "curcol" -> { return crew.getCol(); }
+            case "budget" -> { return crew.getBudget(); }
+            case "deposit" -> {
+                Tile tile = territory.getTileAt(crew);
+                return (long) (tile.getOwner() == null ? -tile.getDeposit() : tile.getDeposit());
+            }
+            case "int" -> {
+                Tile tile = territory.getTileAt(crew);
+                return (long) territory.getInterestRate(tile);
+            }
+            case "maxdeposit" -> { return (long) territory.getMaxDeposit(); }
+            case "random" -> { return rand.nextInt(1,1000); }
+            default -> { return bindings.get(name); }
         }
-        return bindings.get(name);
     }
 
         private static final Pattern pattern = Pattern.compile("[a-zA-Z_$][\\w$]*");
-        private static Matcher matcher;
 
-        /** Check if the input name is legal for an identifier
+    /** Check if the input name is legal for an identifier
          * @param name is the name of an identifier
          * @return true if the input name can be an identifier name
          */
         public static boolean isLegalName(String name){
-            matcher = pattern.matcher(name);
+            Matcher matcher = pattern.matcher(name);
 
             boolean isEmpty = name.isEmpty();
             boolean isReserved = reservedWords.contains(name);
@@ -69,4 +87,6 @@ public class Identifier implements Expression{
         public static Set<String> reservedWords = Set.of("collect","done","down",
                 "downleft","downright","else","if","invest","move","nearby","opponent",
                 "relocate","shoot","then","up","upleft","upright","while");
+
+        private static final Random rand = new Random();
     }

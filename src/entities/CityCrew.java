@@ -2,7 +2,9 @@ package entities;
 
 import parsers.*;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class CityCrew implements Coordinated {
@@ -11,6 +13,7 @@ public class CityCrew implements Coordinated {
     private long budget ;
     private final Set<Tile> ownedTiles ;
     private Tile cityCenter ;
+    private Map<String,Long> bindings;
     private StatementParser construction_plan ;
     public CityCrew(String name, long initial_budget, Tile cityCenter, StatementParser construction_plan) {
         this.name = name ;
@@ -19,9 +22,11 @@ public class CityCrew implements Coordinated {
         this.ownedTiles = new HashSet<>();
         this.ownedTiles.add(cityCenter);
         this.cityCenter = cityCenter ;
+        this.bindings = new HashMap<>();
         this.construction_plan = construction_plan ;
     }
 
+    public Map<String,Long> getBindings() { return bindings; }
     public StatementParser getConstructionPlan() { return construction_plan; }
     public void setConstructionPlan(StatementParser construction_plan) { this.construction_plan = construction_plan; }
 

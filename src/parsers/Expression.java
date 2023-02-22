@@ -1,11 +1,18 @@
 package parsers;
 
+import entities.CityCrew;
+import entities.Territory;
+
 import java.util.Map;
 
 public interface Expression extends Node{
-    /** Evaluate the expression
+    /**
+     * Evaluate the expression
+     *
      * @param bindings is a map from identifiers to integers.
-     * @throws SyntaxError if the expression cannot be evaluated.
+     * @param crew is the CityCrew which execute the construction plan.
+     * @param territory is the Territory which hosts the game.
+     * @throws SyntaxError if the statement cannot be executed.
      */
-    int evaluate(Map<String,Integer> bindings) throws SyntaxError;
+    long evaluate(Map<String,Long> bindings, CityCrew crew, Territory territory) throws SyntaxError;
 }

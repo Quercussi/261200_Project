@@ -1,5 +1,9 @@
 package parsers;
 
+import entities.CityCrew;
+import entities.Territory;
+
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
@@ -17,11 +21,16 @@ public class StatementParser {
     }
 
     /** Executes the statement
-     * @param bindings is a map from identifiers to integers.
+     * @param crew is the CityCrew which execute the construction plan.
+     * @param territory is Territory which hosts the game.
      * @throws SyntaxError if the statement is illegal.
      */
-    public void execute(Map<String,Integer> bindings) throws SyntaxError {
-        stm.execute(bindings);
+    public void execute(Map<String,Long> bindings, CityCrew crew, Territory territory) throws SyntaxError {
+        if(bindings == null)
+            bindings = new HashMap<>();
+
+        bindings.put("done",0L);
+        stm.execute(bindings, crew, territory);
     }
 
     private Statement parseConstructionPlan() throws SyntaxError {
@@ -36,7 +45,7 @@ public class StatementParser {
         Statement stm;
         String token = tkn.consume();
         char beginChar = token.charAt(0);
-        if(token.isEmpty() || !(Character.isLetter(beginChar) || Tokenizer.isOperator(beginChar) || beginChar == '_' || beginChar == '$'))
+        if(!(Character.isLetter(beginChar) || Tokenizer.isOperator(beginChar) || beginChar == '_' || beginChar == '$'))
             throw new SyntaxError("Unknown command: " + token, tkn.getLine());
 
         switch (token) {

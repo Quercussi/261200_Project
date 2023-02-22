@@ -1,5 +1,9 @@
 package parsers;
 
+import entities.CityCrew;
+import entities.Territory;
+import entities.Tile;
+
 import java.util.Map;
 
 public class AttackCmd implements Statement{
@@ -19,7 +23,22 @@ public class AttackCmd implements Statement{
         this.expr = expr;
     }
 
-    public void execute(Map<String, Integer> bindings) throws SyntaxError {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) throws SyntaxError {
+        Tile target = territory.getTileAt(crew.getPositionAt(dir));
 
+        long expenditure = expr.evaluate(bindings, crew, territory);
+        int cost = 1;
+        long budget = crew.getBudget();
+
+        // no-op
+        if(target == null || budget < expenditure + cost)
+            return;
+
+        // all correct
+        crew.withdraw(expenditure + cost);
+        double maximumExpenditure = target.getDeposit() - expenditure;
+        target.withdraw(Math.min(expenditure, maximumExpenditure));
+
+        target.updateOwnership(target.getOwner());
     }
 }

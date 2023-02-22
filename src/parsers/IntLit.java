@@ -1,13 +1,16 @@
 package parsers;
 
+import entities.CityCrew;
+import entities.Territory;
+
 import java.util.Map;
 
 public class IntLit implements Expression {
-    private final int val;
+    private final long val;
 
-    public IntLit(int val) { this.val = val; }
+    public IntLit(long val) { this.val = val; }
 
-    public int evaluate(Map<String, Integer> bindings) { return val; }
+    public long evaluate(Map<String, Long> bindings, CityCrew crew, Territory territory) { return val; }
 
     /** Return true if s is an integer
      *
