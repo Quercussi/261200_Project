@@ -1,3 +1,5 @@
+package orchestrator;
+
 import entities.CityCrew;
 import entities.Position;
 import entities.Territory;
@@ -40,9 +42,13 @@ public class Upbeat {
     public static void main(String[] args) throws MissingConfigurationVariable, IllegalConfiguration, IOException, SyntaxError {
         createGame();
 
+        int count = 0;
         while(crews.size() > 1) {
             System.out.println("turn: " + game.getTurn());
             iterateCrews();
+            count++;
+            if(count >= 10000)
+                break;
         }
     }
 
@@ -76,7 +82,7 @@ public class Upbeat {
     }
 
     private static Map<String,Long> getConfig() throws FileNotFoundException, MissingConfigurationVariable, IllegalConfiguration {
-        ConfigurationReader configurationReader = new ConfigurationReader("config.txt");
+        ConfigurationReader configurationReader = new ConfigurationReader("orchestrator/config.txt");
         return configurationReader.getConfig();
     }
 
@@ -96,7 +102,7 @@ public class Upbeat {
             Scanner input = new Scanner(System.in);
             String name = input.next();
 
-            Path constructionPath = Paths.get(new File("src\\plan"+(i+1)+".txt").getAbsolutePath());
+            Path constructionPath = Paths.get(new File("src\\orchestrator\\plan"+(i+1)+".txt").getAbsolutePath());
             String strConstructionPlan = Files.readString(constructionPath, StandardCharsets.UTF_8);
             StatementParser sp = new StatementParser(strConstructionPlan);
 
