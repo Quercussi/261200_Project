@@ -36,7 +36,7 @@ public class AttackCmd implements Statement{
 
         // all correct
         crew.withdraw(expenditure + cost);
-        double maximumExpenditure = target.getDeposit() - expenditure;
+        double maximumExpenditure = target.getDeposit();
         target.withdraw(Math.min(expenditure, maximumExpenditure));
 
         target.updateOwnership(target.getOwner());
