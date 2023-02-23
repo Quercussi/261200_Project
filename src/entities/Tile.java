@@ -24,8 +24,12 @@ public class Tile implements Coordinated{
     public void updateOwnership(CityCrew crew) {
         if (deposit < 1) {
             setOwner(null);
-            if(crew != null)
-                crew.removeTile(this);
+            if (crew == null)
+                return;
+
+            crew.removeTile(this);
+            if(crew.getCityCenter() == this)
+                crew.setCityCenter(null);
 
         } else if (owner == null) {
             setOwner(crew);
