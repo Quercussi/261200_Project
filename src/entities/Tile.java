@@ -10,14 +10,25 @@ public class Tile implements Coordinated{
         this.owner = null ;
         this.deposit = deposit ;
         this.position = position ;
+
+        if (this.deposit < 0) this.deposit = 0;
+        else if (this.deposit > max_dep) this.deposit = max_dep;
     }
 
     public void setOwner(CityCrew player) { owner = player ; }
 
     public CityCrew getOwner(){ return owner ;}
     public double getDeposit() { return deposit; }
-    public void withdraw(double withdraw) { this.deposit -= withdraw; }
-    public void deposit(double deposit) { this.deposit += deposit; }
+
+    public void withdraw(double withdraw) {
+        this.deposit -= withdraw;
+        if (this.deposit < 0) this.deposit = 0;
+    }
+
+    public void deposit(double deposit) {
+        this.deposit += deposit;
+        if (this.deposit > max_dep) this.deposit = max_dep;
+    }
 
     public Position getPosition() { return position ; }
 
@@ -37,4 +48,10 @@ public class Tile implements Coordinated{
                 crew.addTile(this);
         }
     }
+
+    public static void setMax_dep(Long max_dep) {
+        Tile.max_dep = max_dep;
+    }
+
+    private static long max_dep = Long.MAX_VALUE;
 }

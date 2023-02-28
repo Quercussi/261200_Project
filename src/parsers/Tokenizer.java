@@ -1,6 +1,6 @@
 package parsers;
 
-public class Tokenizer {
+class Tokenizer {
     private final String src;
     private String nextToken = "";
     private int pos = 0;
@@ -62,6 +62,14 @@ public class Tokenizer {
                 line++;
             else if (!Character.isWhitespace(ptrChar))
                 return;
+
+            // This is to prevent infinite loop.
+            // This can occur when the construction plan
+            //  is end with comment.
+            if(pos == -1) {
+                pos = src.length();
+                return;
+            }
         }
     }
 
