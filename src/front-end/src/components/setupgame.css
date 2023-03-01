@@ -1,0 +1,85 @@
+.btnnewgame {
+  position: absolute;
+  bottom: 25%;
+  left: 20%;
+  background: #ffaacf;
+  border: none;
+  width: 400px;
+  height: 400px;
+  font-size: 75px;
+  font-weight: bold;
+  color: #b3005e;
+}
+
+.btnnewgame:hover {
+  border-style: solid;
+  color: #2f58cd;
+}
+
+.btnfileconfig {
+  position: absolute;
+  bottom: 25%;
+  left: 55%;
+  background: #ffaacf;
+  border: none;
+  width: 400px;
+  height: 400px;
+  font-size: 75px;
+  font-weight: bold;
+  color: #b3005e;
+}
+
+.btnfileconfig:hover {
+  border-style: solid;
+  color: #2f58cd;
+}
+
+.circle-1 {
+  position: absolute;
+  top: 55%;
+  left: 40%;
+  background: #e5d1fa;
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+}
+
+.circle-2 {
+  position: absolute;
+  bottom: 50%;
+  right: 55%;
+  background: #e5b8f4;
+  border-radius: 50%;
+  width: 350px;
+  height: 350px;
+}
+
+.circle-3 {
+  position: absolute;
+  top: 55%;
+  right: 75%;
+  background: #e5d1fa;
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+}
+
+.circle-4 {
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  background: #e5b8f4;
+  border-radius: 50%;
+  width: 350px;
+  height: 350px;
+}
+
+.circle-5 {
+  position: absolute;
+  top: 5%;
+  left: 60%;
+  background: #e5d1fa;
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+}
