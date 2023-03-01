@@ -1,6 +1,7 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import orchestrator.Upbeat;
 
 public class Tile implements Coordinated{
     private CityCrew owner ;
@@ -41,7 +42,6 @@ public class Tile implements Coordinated{
         if (deposit < 1) {
             setOwner(null);
             if (crew == null) {
-
                 return;
             }
 
@@ -55,6 +55,13 @@ public class Tile implements Coordinated{
                 crew.addTile(this);
         }
     }
+
+    public double getInterestRate() {
+        if(owner == null)
+            return 0;
+        return Upbeat.config.get("interest_pct") * Math.log10(this.getDeposit()) * Math.log(owner.getTurn());
+    }
+    public void addInterest() { this.deposit(this.getDeposit() * getInterestRate() / 100); }
 
     public static void setMax_dep(Long max_dep) {
         Tile.max_dep = max_dep;

@@ -5,7 +5,6 @@ import parsers.StatementParser;
 import parsers.SyntaxError;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 
 import static orchestrator.ConfigurationReader.missingKeys;
@@ -86,8 +85,9 @@ public class Upbeat {
 
         int count = 0;
         crews = new ArrayList<>();
+        Set<Position> vacantPosition = new HashSet<>();
         for(String name : nameList) {
-            crews.add(randomizedInitCrew(name,count));
+            crews.add(randomizedInitCrew(name,count,vacantPosition));
             count++;
         }
 
@@ -95,8 +95,7 @@ public class Upbeat {
         setStates();
     }
 
-    private static CityCrew randomizedInitCrew(String name, int id) throws SyntaxError {
-        Set<Position> vacantPosition = new HashSet<>();
+    private static CityCrew randomizedInitCrew(String name, int id, Set<Position> vacantPosition) throws SyntaxError {
         for(CityCrew crew : crews)
             vacantPosition.add(crew.getCityCenter().getPosition());
 
@@ -107,6 +106,7 @@ public class Upbeat {
             pos = new Position(row, col);
         } while(positionOverlap(vacantPosition,pos)) ;
 
+        vacantPosition.add(pos);
         return initCrew(name, id,new StatementParser("done"), pos);
     }
 

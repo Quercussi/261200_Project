@@ -38,7 +38,7 @@ class Identifier implements Expression{
             }
             case "int" -> {
                 Tile tile = territory.getTileAt(crew);
-                return (long) territory.getInterestRate(tile);
+                return (long) tile.getInterestRate();
             }
             case "maxdeposit" -> { return (long) territory.getMaxDeposit(); }
             case "random" -> { return rand.nextInt(1,1000); }

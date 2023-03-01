@@ -1,7 +1,6 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import parsers.StatementParser;
 
 import java.util.HashMap;
@@ -12,11 +11,12 @@ import java.util.Set;
 public class CityCrew implements Coordinated {
     private final String name ;
     private final int id;
+    private int turn = 0;
     private Position position ;
     private long budget ;
     private final Set<Tile> ownedTiles ;
     private Tile cityCenter ;
-    private Map<String,Long> bindings;
+    private final Map<String,Long> bindings;
     private StatementParser construction_plan;
     public CityCrew(String name, int id, long initial_budget, Tile cityCenter, StatementParser construction_plan) {
         this.name = name ;
@@ -33,7 +33,7 @@ public class CityCrew implements Coordinated {
     public Map<String,Long> getBindings() { return bindings; }
     @JsonIgnore
     public StatementParser getConstructionPlan() { return construction_plan; }
-    public String getConstructionPlanStr() { return construction_plan == null ? "" : construction_plan.getPlan(); };
+    public String getConstructionPlanStr() { return construction_plan == null ? "" : construction_plan.getPlan(); }
     public void setConstructionPlan(StatementParser construction_plan) { this.construction_plan = construction_plan; }
 
     public String getName() { return name; }
@@ -59,6 +59,9 @@ public class CityCrew implements Coordinated {
     public void removeTile(Tile tile){
         ownedTiles.remove(tile) ;
     }
+
+    public void incrementTurn() { turn++; }
+    public int getTurn() { return turn; }
 
     @JsonIgnore
     public Position getPosition(){ return position ;}
