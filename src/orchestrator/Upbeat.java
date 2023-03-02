@@ -60,8 +60,6 @@ public class Upbeat {
            for(Tile tile : crew.getOwnedTiles())
                game.addInterest(tile);
 
-           if(crew.getCityCenter() == null)
-               continue;
            game.execute(crew);
        }
 
@@ -90,7 +88,6 @@ public class Upbeat {
 
     private static void setConfig(Map<String,Long> config) {
         Upbeat.config = config;
-        Tile.setMax_dep(config.get("max_dep"));
     }
 
     private static void setCrews() throws IOException, SyntaxError {
