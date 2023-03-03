@@ -34,6 +34,19 @@
   color: #2f58cd;
 }
 
+.fileconfiginput {
+  position: absolute;
+  bottom: 14%;
+  right: 7%;
+  padding: 32px;
+  height: 350px;
+  width: 500px;
+  font-size: 20px;
+  border: none;
+  border-radius: 30px;
+  z-index: 1000;
+}
+
 .circle-1 {
   position: absolute;
   top: 55%;
