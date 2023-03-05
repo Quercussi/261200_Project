@@ -1,0 +1,31 @@
+.fileconfig-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.fileconfig-popupinner {
+  position: absolute;
+  left: 30%;
+  top: 10%;
+  border-radius: 30px;
+  width: 650px;
+  height: 550px;
+  background-color: #eddbc7;
+}
+
+.crossbtn {
+  position: absolute;
+  border: none;
+  font-size: 40px;
+  left: 93%;
+  bottom: 83%;
+  z-index: 1000;
+}
+
+.crossbtn:hover {
+  color: red;
+}

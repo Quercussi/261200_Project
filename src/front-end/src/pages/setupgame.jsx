@@ -1,7 +1,12 @@
 import Link from "next/link";
 import BackButton from "@/src/components/BackButton";
+import FileConfig from "../components/FileConfig";
+import DoneButton from "../components/DoneButton";
+import { useState } from "react";
 
 export default function SetupGame() {
+  const [buttonPopup, SetButtonPopup] = useState(false);
+
   return (
     <div>
       <BackButton />
@@ -14,10 +19,14 @@ export default function SetupGame() {
         NEW <br />
         GAME <br />▶
       </button>
-      <button className="btnfileconfig">
+      <button className="btnfileconfig" onClick={() => SetButtonPopup(true)}>
         FILE <br />
-        CONFIG <br /> ✎
+        CONFIG <br /> ✎{" "}
       </button>
+      <FileConfig trigger={buttonPopup} setTrigger={SetButtonPopup}>
+        <DoneButton setTrigger={SetButtonPopup} />
+        <textarea type="text" className="fileconfiginput"></textarea>
+      </FileConfig>
     </div>
   );
 }
