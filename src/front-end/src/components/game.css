@@ -1,0 +1,29 @@
+.btnconplan {
+  position: absolute;
+  top: 40%;
+  left: 80%;
+  border-radius: 50%;
+  border: none;
+  width: 150px;
+  height: 150px;
+  font-size: 21px;
+  font-weight: bold;
+  background-color: #ffaacf;
+}
+
+.btnconplan:hover {
+  border: solid;
+}
+
+.constructionplaninput {
+  position: absolute;
+  bottom: 14%;
+  right: 7%;
+  padding: 32px;
+  height: 350px;
+  width: 500px;
+  font-size: 20px;
+  border: none;
+  border-radius: 30px;
+  z-index: 1000;
+}

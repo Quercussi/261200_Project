@@ -1,0 +1,16 @@
+.reset-button {
+  position: absolute;
+  top: 88%;
+  left: 55%;
+  background-color: #dd0c0c;
+  border-radius: 30px;
+  font-size: 35px;
+  font-weight: bold;
+  border: none;
+  width: 180px;
+  height: 53px;
+}
+
+.reset-button:hover {
+  border: solid;
+}
