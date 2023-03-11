@@ -1,4 +1,4 @@
-package com.UPBEATg11.API;
+package com.UPBEATg11.OOP_Project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
