@@ -5,28 +5,12 @@ import DoneButton from "../components/DoneButton";
 import FileConfig from "../components/FileConfig";
 import { useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
+import { withRouter } from "next/router";
 
 let client;
 
 export default function SetupGame() {
-  useEffect(() => {
-    if (!client) {
-      client = new Client({
-        brokerURL: "ws://localhost:8080/demo-websocket",
-
-        onConnect: () => {
-          client.subscribe("/topic/config", (message) => {
-            const body = JSON.parse(message.body);
-            setConfig(body);
-            console.log(body);
-          });
-        },
-      });
-
-      client.activate();
-    }
-  }, []);
-
+  const [gameState, setGameState] = useState("configSetting");
   const [buttonPopup, SetButtonPopup] = useState(false);
   const [config, setConfig] = useState({
     m: 20,
@@ -40,8 +24,38 @@ export default function SetupGame() {
     interest_pct: 5,
   });
 
+  useEffect(() => {
+    if (!client) {
+      client = new Client({
+        brokerURL: "ws://localhost:8080/demo-websocket",
+
+        onConnect: async () => {
+          await client.subscribe("/topic/config", (message) => {
+            const body = JSON.parse(message.body);
+            const tempConfig = body;
+            tempConfig.init_plan_time =
+              tempConfig.init_plan_min * 60 + tempConfig.init_plan_sec;
+            tempConfig.plan_rev_time =
+              tempConfig.plan_rev_min * 60 + tempConfig.plan_rev_sec;
+            setConfig(tempConfig);
+
+            console.log(tempConfig);
+          });
+          await client.subscribe("/topic/gameState", (message) => {
+            const body = JSON.parse(message.body);
+            console.log(body);
+            setGameState(body);
+          });
+          await client.publish({ destination: "/app/getGameState" });
+        },
+      });
+
+      client.activate();
+    }
+  }, []);
+
   const getConfigPublic = () => {
-    client.publish({ destination: "/app/getConfig" });
+    if (client.connected) client.publish({ destination: "/app/getConfig" });
   };
 
   const postConfig = () => {
@@ -67,7 +81,12 @@ export default function SetupGame() {
       <p className="circle-5"></p>
       <Link href="/joinpage">
         <button className="btnnewgame">
-          NEW <br />
+          {gameState === "configSetting"
+            ? "NEW"
+            : gameState === "joining"
+            ? "JOIN"
+            : "WATCH"}{" "}
+          <br />
           GAME <br />▶
         </button>
       </Link>
@@ -77,6 +96,7 @@ export default function SetupGame() {
           getConfigPublic();
           SetButtonPopup(true);
         }}
+        disabled={gameState !== "configSetting"}
       >
         FILE <br />
         CONFIG <br /> ✎

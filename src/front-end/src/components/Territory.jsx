@@ -1,6 +1,6 @@
 import React from "react";
 import HexagonGrid from "./hexagongrid";
-import times from "lodash/times";
+import times from "lodash.times";
 
 const Territory = () => {
   const getHexProps = (hexagon) => {
