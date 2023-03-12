@@ -1,0 +1,72 @@
+.btnstartgame {
+  position: absolute;
+  top: 500px;
+  left: 34%;
+  padding: 10px 15px;
+  border: "none";
+  border-radius: 50px;
+  width: 500px;
+  font-size: 50px;
+  font-weight: bold;
+}
+
+.btnstartgame:hover {
+  background-color: #ffdd83;
+  border: solid;
+}
+
+.inputname {
+  position: absolute;
+  top: 400px;
+  left: 36%;
+  width: 400px;
+  height: 60px;
+  font-size: 30px;
+}
+
+.btnjoin {
+  position: absolute;
+  top: 500px;
+  left: 36%;
+  width: 400px;
+  font-size: 40px;
+  font-weight: bold;
+  color: whitesmoke;
+  background: black;
+}
+
+.btnjoin:hover {
+  background: #e96479;
+  color: black;
+  border: solid;
+}
+
+.joingame {
+  position: absolute;
+  top: 200px;
+  left: 33.5%;
+  font-size: 80px;
+  font-weight: bold;
+}
+
+.waiting {
+  position: absolute;
+  left: 3%;
+}
+
+.crewname {
+  position: relative;
+  top: 80px;
+  left: 3.5%;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.square {
+  position: relative;
+  top: 77px;
+  left: 3%;
+  width: 320px;
+  padding: 1px 15px;
+  background-color: #ffaacf;
+}

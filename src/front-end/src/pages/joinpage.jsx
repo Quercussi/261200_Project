@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
+import BackButton1 from "@/src/components/BackButton1";
 
 let client;
 
@@ -36,7 +37,10 @@ export default function JoinPage() {
 
   const joinOption = (
     <div>
+      <h1 className="joingame">JOIN GAME!</h1>
+      <BackButton1 />
       <input
+        className="inputname"
         type="text"
         placeholder="insert your name here..."
         onChange={(e) => setName(e.target.value)}
@@ -44,6 +48,7 @@ export default function JoinPage() {
       />
       <br />
       <button
+        className="btnjoin"
         onClick={() => {
           client.publish({ destination: "/app/join", body: name });
           client.publish({ destination: "/app/updateUsers" });
@@ -57,10 +62,10 @@ export default function JoinPage() {
 
   const preamble = (
     <div>
-      <h1>Waiting for other users</h1>
+      <h1 className="waiting">Waiting for other users...</h1>
       {crews.map((crew, idx) => {
         return (
-          <div key={idx}>
+          <div key={idx} className="crewname square">
             <p>
               {idx + 1} : {crew.name}
             </p>
@@ -69,7 +74,7 @@ export default function JoinPage() {
       })}
       <br />
       <Link href={{ pathname: "/gamepage", query: token }}>
-        <button>Start game</button>
+        <button className="btnstartgame">Start game</button>
       </Link>
     </div>
   );

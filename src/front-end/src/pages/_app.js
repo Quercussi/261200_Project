@@ -10,6 +10,7 @@ import "@/src/components/game.css";
 import "@/src/components/timer.css";
 import "@/src/components/SaveButton.css";
 import "@/src/styles/globals.css";
+import "@/src/components/joinpage.css";
 
 export default function App({ Component, pageProps }) {
   return <Component {...pageProps} />;
