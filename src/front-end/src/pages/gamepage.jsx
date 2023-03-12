@@ -3,6 +3,7 @@ import { useState } from "react";
 import SaveButton from "../components/SaveButton";
 import Timer from "../components/timer";
 import { useRouter } from "next/router";
+import Territory from "../components/Territory";
 
 export default function Game() {
   const router = useRouter();
@@ -24,6 +25,9 @@ export default function Game() {
   return (
     <div>
       <Timer time={0} />
+      <div className="territory">
+        <Territory />
+      </div>
       <button className="btnconplan" onClick={() => SetButtonPopup(true)}>
         Construction
         <br />

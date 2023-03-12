@@ -102,7 +102,11 @@ const HexagonGrid = (props) => {
                   width={hexDim.width}
                   x={`${hexDim.x}px`}
                 >
-                  <Hexagon {..._hexProps} flatTop>
+                  <Hexagon
+                    {..._hexProps}
+                    flatTop
+                    backgroundImage="image/region.png"
+                  >
                     {tryInvoke(renderHexagonContent, [hexagon], <tspan />)}
                   </Hexagon>
                 </svg>

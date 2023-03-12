@@ -27,3 +27,9 @@
   border-radius: 30px;
   z-index: 1000;
 }
+
+.territory {
+  position: absolute;
+  top: 20%;
+  right: 35%;
+}
