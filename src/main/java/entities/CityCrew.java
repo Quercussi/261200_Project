@@ -11,6 +11,7 @@ import java.util.Set;
 public class CityCrew implements Coordinated {
     private final String name ;
     private final int id;
+    private final String uuid;
     private int turn = 0;
     private Position position ;
     private long budget ;
@@ -18,9 +19,10 @@ public class CityCrew implements Coordinated {
     private Tile cityCenter ;
     private final Map<String,Long> bindings;
     private StatementParser construction_plan;
-    public CityCrew(String name, int id, long initial_budget, Tile cityCenter, StatementParser construction_plan) {
+    public CityCrew(String name, int id, String uuid, long initial_budget, Tile cityCenter, StatementParser construction_plan) {
         this.name = name ;
         this.id = id;
+        this.uuid = uuid;
         this.position = cityCenter.getPosition() ;
         this.budget = initial_budget ;
         this.ownedTiles = new HashSet<>();
@@ -38,6 +40,8 @@ public class CityCrew implements Coordinated {
 
     public String getName() { return name; }
     public int getId() { return id; }
+    @JsonIgnore
+    public String getUuid() { return uuid; }
     public long getBudget() { return budget; }
     public void withdraw(long budget) {
         this.budget -= budget;

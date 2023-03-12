@@ -12,9 +12,9 @@ import static orchestrator.ConfigurationReader.negativeKeyValue;
 
 public class Upbeat {
     public static Territory game;
-    public static List<CityCrew> crews;
+    public static List<CityCrew> crews = new ArrayList<>();
     public static List<CityCrew> losers = new ArrayList<>();
-    public static Map<String,Long> config;
+    public static Map<String,Long> config = null;
 
     public static State currentState;
 
@@ -39,8 +39,10 @@ public class Upbeat {
     // Configuration Initialization
 
     public static Map<String,Long> getConfig() throws FileNotFoundException, MissingConfigurationVariable, IllegalConfiguration {
-        ConfigurationReader configurationReader = new ConfigurationReader("main/java/orchestrator/config.txt");
-        return configurationReader.getConfig();
+        if (config == null)
+            setConfig(new ConfigurationReader("main/java/orchestrator/config.txt").getConfig());
+
+        return config;
     }
 
     public static void setConfig(Map<String, Long> config) throws MissingConfigurationVariable, IllegalConfiguration {
@@ -48,7 +50,6 @@ public class Upbeat {
 
         // All passes;
         Upbeat.config = config;
-
         rows = config.get("m");
         cols = config.get("n");
         init_center_dep = config.get("init_center_dep");
@@ -79,23 +80,8 @@ public class Upbeat {
 
 
     // Crews and Tiles Initialization
-
-    public static void ConstructGame(List<String> nameList) throws SyntaxError {
-        game = new Territory(config);
-
-        int count = 0;
-        crews = new ArrayList<>();
+    public static CityCrew randomizedInitCrew(String name, int id, String uuid) throws SyntaxError {
         Set<Position> vacantPosition = new HashSet<>();
-        for(String name : nameList) {
-            crews.add(randomizedInitCrew(name,count,vacantPosition));
-            count++;
-        }
-
-        game.setCrews(crews);
-        setStates();
-    }
-
-    private static CityCrew randomizedInitCrew(String name, int id, Set<Position> vacantPosition) throws SyntaxError {
         for(CityCrew crew : crews)
             vacantPosition.add(crew.getCityCenter().getPosition());
 
@@ -107,14 +93,14 @@ public class Upbeat {
         } while(positionOverlap(vacantPosition,pos)) ;
 
         vacantPosition.add(pos);
-        return initCrew(name, id,new StatementParser("done"), pos);
+        return initCrew(name, id,uuid,new StatementParser("done"), pos);
     }
 
-    private static CityCrew initCrew(String name, int id, StatementParser sp, Position cityCenterPos) {
+    private static CityCrew initCrew(String name, int id, String uuid, StatementParser sp, Position cityCenterPos) {
         int row = cityCenterPos.getRow();
         int col = cityCenterPos.getCol();
         Tile tile = game.getGraph()[row][col];
-        CityCrew crew = new CityCrew(name, id, init_budget, tile, sp);
+        CityCrew crew = new CityCrew(name, id, uuid, init_budget, tile, sp);
         crew.setCityCenter(tile);
 
         tile.deposit(init_center_dep);

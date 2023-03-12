@@ -2,8 +2,14 @@ import ConstructionPlanPage from "../components/ConstructionPlanPage";
 import { useState } from "react";
 import SaveButton from "../components/SaveButton";
 import Timer from "../components/timer";
+import { useRouter } from "next/router";
 
 export default function Game() {
+  const router = useRouter();
+  const data = router.query;
+  const uuid = data.uuid;
+  const myId = data.crewId;
+
   const [buttonPopup, SetButtonPopup] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
