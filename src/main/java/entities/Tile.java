@@ -44,6 +44,7 @@ public class Tile implements Coordinated{
             if (crew == null) {
                 return;
             }
+            crew.resign();
 
             crew.removeTile(this);
             if(crew.getCityCenter() == this)

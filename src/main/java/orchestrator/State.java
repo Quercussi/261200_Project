@@ -35,8 +35,7 @@ public class State {
         // skip losers
         for(CityCrew crew : Upbeat.crews)
             if(crew.getCityCenter() == null) {
-                Upbeat.crews.remove(crew);
-                Upbeat.losers.add(crew);
+                crew.resign();
             }
 
         while(Upbeat.losers.contains(nextState.getCrew()))
