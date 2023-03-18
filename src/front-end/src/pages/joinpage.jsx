@@ -23,6 +23,7 @@ export default function JoinPage() {
             console.log(body);
             setToken(body);
           });
+          client.publish({ destination: "/app/updateUsers" });
         },
       });
 
@@ -49,9 +50,9 @@ export default function JoinPage() {
       <br />
       <button
         className="btnjoin"
-        onClick={() => {
-          client.publish({ destination: "/app/join", body: name });
-          client.publish({ destination: "/app/updateUsers" });
+        onClick={async () => {
+          await client.publish({ destination: "/app/join", body: name });
+          await client.publish({ destination: "/app/updateUsers" });
           setHasJoined(true);
         }}
       >

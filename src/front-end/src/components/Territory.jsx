@@ -1,26 +1,27 @@
-import React from "react";
-import HexagonGrid from "./hexagongrid";
-import times from "lodash/times";
+import HexagonOdd from "./hexagonodd";
+import HexagonEven from "./hexagoneven";
+import HexagonRow from "./hexrow";
+import Draggable from "react-draggable";
 
-const Territory = () => {
-  const getHexProps = (hexagon) => {
-    return {
-      style: {
-        stroke: "black",
-      },
-    };
-  };
+export default function Territory() {
+  const rows = [];
 
-  let rows = times(100, (id) => id);
+  for (let i = 1; i <= 20; i++) {
+    for (let j = 1; j <= 20; j++) {
+      if (j % 2 === 0) {
+        rows.push(<HexagonEven />);
+      } else {
+        rows.push(<HexagonOdd />);
+      }
+    }
+    rows.push(<HexagonRow />);
+  }
 
   return (
-    <HexagonGrid
-      gridWidth={450}
-      gridHeight={450}
-      hexagons={rows}
-      hexProps={getHexProps}
-    />
+    <div>
+      <Draggable>
+        <div className="area">{rows}</div>
+      </Draggable>
+    </div>
   );
-};
-
-export default Territory;
+}
