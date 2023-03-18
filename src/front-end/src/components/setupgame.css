@@ -29,6 +29,24 @@
   color: #b3005e;
 }
 
+.btnfileconfig:disabled {
+  position: absolute;
+  bottom: 25%;
+  left: 55%;
+  background: #d1d1d1;
+  border: none;
+  width: 400px;
+  height: 400px;
+  font-size: 75px;
+  font-weight: bold;
+  color: #6b0039;
+}
+
+.btnfileconfig:disabled:hover {
+  border: none;
+  color: #6b0039;
+}
+
 .btnfileconfig:hover {
   border-style: solid;
   color: #2f58cd;

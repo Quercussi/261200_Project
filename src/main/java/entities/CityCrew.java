@@ -1,12 +1,13 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import orchestrator.Upbeat;
 import parsers.StatementParser;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 public class CityCrew implements Coordinated {
     private final String name ;
@@ -22,7 +23,6 @@ public class CityCrew implements Coordinated {
     public CityCrew(String name, int id, String uuid, long initial_budget, Tile cityCenter, StatementParser construction_plan) {
         this.name = name ;
         this.id = id;
-        this.uuid = uuid;
         this.position = cityCenter.getPosition() ;
         this.budget = initial_budget ;
         this.ownedTiles = new HashSet<>();
@@ -30,6 +30,15 @@ public class CityCrew implements Coordinated {
         this.cityCenter = cityCenter ;
         this.bindings = new HashMap<>();
         this.construction_plan = construction_plan ;
+
+        try{
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+
+        byte[] hash = digest.digest(uuid.getBytes(StandardCharsets.UTF_8));
+        this.uuid = Base64.getEncoder().encodeToString(hash);
     }
 
     public Map<String,Long> getBindings() { return bindings; }
@@ -67,6 +76,23 @@ public class CityCrew implements Coordinated {
     public void incrementTurn() { turn++; }
     public int getTurn() { return turn; }
 
+    public void resign() {
+        if(getCityCenter() == null) {
+            Upbeat.crews.remove(this);
+            Upbeat.losers.add(this);
+
+            for(Tile tile : getOwnedTiles())
+                tile.setOwner(null);
+        }
+    }
+
+    public boolean correctUUID(String inputUUID) {
+        byte[] hash = digest.digest(inputUUID.getBytes(StandardCharsets.UTF_8));
+        return this.uuid.equals(Base64.getEncoder().encodeToString(hash));
+    }
+
     @JsonIgnore
     public Position getPosition(){ return position ;}
+
+    private final MessageDigest digest;
 }

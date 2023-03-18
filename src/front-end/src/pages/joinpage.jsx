@@ -36,6 +36,10 @@ export default function JoinPage() {
   const [crews, setCrews] = useState([]);
   const [token, setToken] = useState({});
 
+  const gameStartHandler = () => {
+    if (client.connected) client.publish({ destination: "/app/startGame" });
+  };
+
   const joinOption = (
     <div>
       <h1 className="joingame">JOIN GAME!</h1>
@@ -53,6 +57,7 @@ export default function JoinPage() {
         onClick={async () => {
           await client.publish({ destination: "/app/join", body: name });
           await client.publish({ destination: "/app/updateUsers" });
+          await client.publish({ destination: "/app/getGameState" });
           setHasJoined(true);
         }}
       >
@@ -75,7 +80,9 @@ export default function JoinPage() {
       })}
       <br />
       <Link href={{ pathname: "/gamepage", query: token }}>
-        <button className="btnstartgame">Start game</button>
+        <button className="btnstartgame" onClick={() => gameStartHandler()}>
+          Start game
+        </button>
       </Link>
     </div>
   );

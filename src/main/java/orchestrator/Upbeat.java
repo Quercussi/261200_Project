@@ -11,17 +11,21 @@ import static orchestrator.ConfigurationReader.missingKeys;
 import static orchestrator.ConfigurationReader.negativeKeyValue;
 
 public class Upbeat {
+    public enum GameState {configSetting, joining, gameStart}
+
     public static Territory game;
     public static List<CityCrew> crews = new ArrayList<>();
     public static List<CityCrew> losers = new ArrayList<>();
     public static Map<String,Long> config = null;
 
     public static State currentState;
+    public static GameState gameState = GameState.configSetting;
 
     private static long rows;
     private static long cols;
     private static long init_budget;
     private static long init_center_dep;
+    private static long rev_cost;
 
 //    m=20
 //    n=15
@@ -54,6 +58,7 @@ public class Upbeat {
         cols = config.get("n");
         init_center_dep = config.get("init_center_dep");
         init_budget = config.get("init_budget");
+        rev_cost = config.get("rev_cost");
     }
 
     public static void checkConfigValidity(Map<String,Long> config) throws MissingConfigurationVariable, IllegalConfiguration {
@@ -110,7 +115,7 @@ public class Upbeat {
 
     public static Territory getTerritory() { return game; }
 
-    private static void setStates() {
+    public static void setStates() {
         State[] states = new State[crews.size()];
 
         int statesCount = states.length;
@@ -137,5 +142,23 @@ public class Upbeat {
         return false;
     }
 
+    public static long get_rev_cost() { return rev_cost; }
+
     private static final Random rand = new Random();
+
+    public static CityCrew getCrewWith(int crewId) {
+        CityCrew crew = null;
+        for(CityCrew c : Upbeat.crews) {
+            if(crewId == c.getId()) {
+                crew = c;
+                break;
+            }
+        }
+
+        return crew;
+    }
+
+    public static GameState getGameState() {
+        return gameState;
+    }
 }
