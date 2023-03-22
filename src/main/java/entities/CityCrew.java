@@ -1,8 +1,11 @@
 package entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import orchestrator.InvalidToken;
 import orchestrator.Upbeat;
+import parsers.Statement;
 import parsers.StatementParser;
+import parsers.SyntaxError;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -13,14 +16,16 @@ public class CityCrew implements Coordinated {
     private final String name ;
     private final int id;
     private final String uuid;
+    private final String sessionId;
     private int turn = 0;
     private Position position ;
     private long budget ;
     private final Set<Tile> ownedTiles ;
     private Tile cityCenter ;
     private final Map<String,Long> bindings;
-    private StatementParser construction_plan;
-    public CityCrew(String name, int id, String uuid, long initial_budget, Tile cityCenter, StatementParser construction_plan) {
+    private String str_construction_plan;
+    private Statement construction_plan;
+    public CityCrew(String name, int id, String uuid, String sessionId, long initial_budget, Tile cityCenter, String str_construction_plan) throws SyntaxError {
         this.name = name ;
         this.id = id;
         this.position = cityCenter.getPosition() ;
@@ -29,7 +34,8 @@ public class CityCrew implements Coordinated {
         this.ownedTiles.add(cityCenter);
         this.cityCenter = cityCenter ;
         this.bindings = new HashMap<>();
-        this.construction_plan = construction_plan ;
+        this.str_construction_plan = str_construction_plan;
+        this.construction_plan = new StatementParser(str_construction_plan).compile();
 
         try{
             digest = MessageDigest.getInstance("SHA-256");
@@ -37,15 +43,24 @@ public class CityCrew implements Coordinated {
             throw new RuntimeException(e);
         }
 
-        byte[] hash = digest.digest(uuid.getBytes(StandardCharsets.UTF_8));
-        this.uuid = Base64.getEncoder().encodeToString(hash);
+        byte[] uuid_hash = digest.digest(uuid.getBytes(StandardCharsets.UTF_8));
+        this.uuid = Base64.getEncoder().encodeToString(uuid_hash);
+        byte[] sessionId_hash = digest.digest(sessionId.getBytes(StandardCharsets.UTF_8));
+        this.sessionId = Base64.getEncoder().encodeToString(sessionId_hash);
     }
 
     public Map<String,Long> getBindings() { return bindings; }
     @JsonIgnore
-    public StatementParser getConstructionPlan() { return construction_plan; }
-    public String getConstructionPlanStr() { return construction_plan == null ? "" : construction_plan.getPlan(); }
-    public void setConstructionPlan(StatementParser construction_plan) { this.construction_plan = construction_plan; }
+    public Statement getConstructionPlan() { return construction_plan; }
+    @JsonIgnore
+    public String getConstructionPlanStr() { return construction_plan == null ? "" : str_construction_plan; }
+    public void setConstructionPlan(String str_construction_plan, String uuid) throws SyntaxError, InvalidToken {
+        if(!correctUUID(uuid))
+            throw new InvalidToken("The input token is incorrect.");
+
+        this.str_construction_plan = str_construction_plan;
+        this.construction_plan = new StatementParser(str_construction_plan).compile();
+    }
 
     public String getName() { return name; }
     public int getId() { return id; }
@@ -56,9 +71,7 @@ public class CityCrew implements Coordinated {
         this.budget -= budget;
         if(this.budget <= 0) this.budget = 0;
     }
-    public void deposit(long budget){
-        this.budget += budget;
-    }
+    public void deposit(long budget) { this.budget += budget; }
     public Set<Tile> getOwnedTiles() { return ownedTiles; }
     public Tile getCityCenter() { return cityCenter; }
     public void setCityCenter(Tile cityCenter) { this.cityCenter = cityCenter; }
@@ -76,7 +89,10 @@ public class CityCrew implements Coordinated {
     public void incrementTurn() { turn++; }
     public int getTurn() { return turn; }
 
-    public void resign() {
+    public void resign(String uuid) throws InvalidToken {
+        if(!correctUUID(uuid))
+            throw new InvalidToken("The input token is incorrect.");
+
         if(getCityCenter() == null) {
             Upbeat.crews.remove(this);
             Upbeat.losers.add(this);
@@ -89,6 +105,11 @@ public class CityCrew implements Coordinated {
     public boolean correctUUID(String inputUUID) {
         byte[] hash = digest.digest(inputUUID.getBytes(StandardCharsets.UTF_8));
         return this.uuid.equals(Base64.getEncoder().encodeToString(hash));
+    }
+
+    public boolean correctSessionId(String inputSessionId) {
+        byte[] hash = digest.digest(inputSessionId.getBytes(StandardCharsets.UTF_8));
+        return this.sessionId.equals(Base64.getEncoder().encodeToString(hash));
     }
 
     @JsonIgnore

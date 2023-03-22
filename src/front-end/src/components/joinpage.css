@@ -41,6 +41,17 @@
   border: solid;
 }
 
+.btnjoin:disabled {
+  position: absolute;
+  top: 500px;
+  left: 36%;
+  width: 400px;
+  font-size: 40px;
+  font-weight: bold;
+  color: black;
+  background: whitesmoke;
+}
+
 .joingame {
   position: absolute;
   top: 200px;
