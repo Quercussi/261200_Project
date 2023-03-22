@@ -31,12 +31,12 @@ public interface Coordinated {
         int col = getCol();
 
         switch (Dir) {
-            case up -> { return new Position(row-1, col); }
-            case down -> { return new Position(row+1, col); }
-            case upright -> { return new Position(row-(col%2==0 ? 1 : 0),col+1); }
-            case downright -> { return new Position(row+(col%2==0 ? 0 : 1),col+1); }
-            case upleft -> { return new Position(row-(col%2==0 ? 1 : 0),col-1); }
-            case downleft -> { return new Position(row+(col%2==0 ? 0 : 1),col-1); }
+            case up -> { return Position.of(row-1, col); }
+            case down -> { return Position.of(row+1, col); }
+            case upright -> { return Position.of(row-(col%2==0 ? 1 : 0),col+1); }
+            case downright -> { return Position.of(row+(col%2==0 ? 0 : 1),col+1); }
+            case upleft -> { return Position.of(row-(col%2==0 ? 1 : 0),col-1); }
+            case downleft -> { return Position.of(row+(col%2==0 ? 0 : 1),col-1); }
         }
 
         return null;

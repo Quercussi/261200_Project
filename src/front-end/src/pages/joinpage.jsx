@@ -9,20 +9,32 @@ export default function JoinPage() {
   useEffect(() => {
     if (!client) {
       client = new Client({
-        brokerURL: "ws://localhost:8080/demo-websocket",
+        brokerURL: "ws://localhost:8080/g14-websocket",
 
         onConnect: () => {
-          client.subscribe("/topic/joinedUsers", (message) => {
-            const body = JSON.parse(message.body);
-            console.log(body);
-            setCrews(body);
-          });
+          console.log("...CONNECTED...");
 
           client.subscribe("/user/queue/token", (message) => {
             const body = JSON.parse(message.body);
             console.log(body);
             setToken(body);
+            // client.publish({ destination: "/app/updateUsers" });
+            // client.publish({ destination: "/app/getGameState" });
           });
+
+          client.subscribe("/topic/joinedUsers", async (message) => {
+            const body = await JSON.parse(message.body);
+            setCrews(body);
+            console.log(body);
+          });
+
+          client.subscribe("/topic/gameState", (message) => {
+            const body = JSON.parse(message.body);
+            console.log(body);
+            setGameState(body);
+          });
+
+          setIsConnected(true);
         },
       });
 
@@ -30,10 +42,17 @@ export default function JoinPage() {
     }
   }, []);
 
+  const [isConnected, setIsConnected] = useState(false);
   const [hasJoined, setHasJoined] = useState(false);
   const [name, setName] = useState("");
   const [crews, setCrews] = useState([]);
   const [token, setToken] = useState({});
+  const [gameState, setGameState] = useState("configSetting");
+
+  const joinGameHandler = () => {
+    client.publish({ destination: "/app/join", body: name });
+    setHasJoined(true);
+  };
 
   const gameStartHandler = () => {
     if (client.connected) client.publish({ destination: "/app/startGame" });
@@ -46,21 +65,17 @@ export default function JoinPage() {
       <input
         className="inputname"
         type="text"
-        placeholder="insert your name here..."
+        placeholder="enter your name here..."
         onChange={(e) => setName(e.target.value)}
         value={name}
       />
       <br />
       <button
         className="btnjoin"
-        onClick={async () => {
-          await client.publish({ destination: "/app/join", body: name });
-          await client.publish({ destination: "/app/updateUsers" });
-          await client.publish({ destination: "/app/getGameState" });
-          setHasJoined(true);
-        }}
+        onClick={() => joinGameHandler()}
+        disabled={!isConnected}
       >
-        join
+        {isConnected ? "join" : "connecting..."}
       </button>
     </div>
   );

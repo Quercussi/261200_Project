@@ -1,6 +1,7 @@
 package orchestrator;
 
 import entities.Alteration;
+import parsers.Statement;
 import parsers.StatementParser;
 import parsers.SyntaxError;
 
@@ -48,8 +49,8 @@ public class ConfigurationReader {
         Map<String,Long> config = new HashMap<>();
 
         try {
-            StatementParser configParser = new StatementParser(strConfig);
-            configParser.execute(config, null, null, null);
+            Statement configStatement = new StatementParser(strConfig).compile();
+            configStatement.execute(config,null,null,null);
 
         } catch (SyntaxError e) { throw new IllegalConfiguration(e.getMessage()); }
 

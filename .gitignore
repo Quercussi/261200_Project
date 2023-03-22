@@ -29,5 +29,8 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
+### cloc ###
+cloc-1.96.exe
+
 ### VS Code ###
 .vscode/

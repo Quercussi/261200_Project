@@ -44,7 +44,16 @@ public class Tile implements Coordinated{
             if (crew == null) {
                 return;
             }
-            crew.resign();
+
+            // <resigning>
+            if(crew.getCityCenter() == null) {
+                Upbeat.crews.remove(crew);
+                Upbeat.losers.add(crew);
+
+                for(Tile tile : crew.getOwnedTiles())
+                    tile.setOwner(null);
+            }
+            // </resigning>
 
             crew.removeTile(this);
             if(crew.getCityCenter() == this)

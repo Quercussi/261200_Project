@@ -5,7 +5,6 @@ import DoneButton from "../components/DoneButton";
 import FileConfig from "../components/FileConfig";
 import { useEffect, useState } from "react";
 import { Client } from "@stomp/stompjs";
-import { withRouter } from "next/router";
 
 let client;
 
@@ -27,7 +26,7 @@ export default function SetupGame() {
   useEffect(() => {
     if (!client) {
       client = new Client({
-        brokerURL: "ws://localhost:8080/demo-websocket",
+        brokerURL: "ws://localhost:8080/g14-websocket",
 
         onConnect: async () => {
           await client.subscribe("/topic/config", (message) => {
