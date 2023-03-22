@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import entities.Alteration;
 import entities.CityCrew;
 import entities.Tile;
-import parsers.StatementParser;
+import parsers.Statement;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @JsonIgnoreProperties({"nextState"})
 public class State {
@@ -19,7 +20,10 @@ public class State {
         this.nextState = nextState;
     }
 
-    public List<Alteration> execute() {
+    public List<Alteration> execute(String uuid) throws InvalidToken {
+        if(!crew.correctUUID(uuid))
+            throw new InvalidToken("The input token is incorrect.");
+
         crew.incrementTurn();
 
         // Add interest
@@ -28,14 +32,14 @@ public class State {
 
 
         // Execute Construction Plan
-        StatementParser sp = crew.getConstructionPlan();
+        Statement stm = crew.getConstructionPlan();
         List<Alteration> alterations = new ArrayList<>();
-        sp.execute(crew.getBindings(), crew, Upbeat.game, alterations);
+        stm.execute(crew.getBindings(), crew, Upbeat.game, alterations);
 
         // skip losers
         for(CityCrew crew : Upbeat.crews)
             if(crew.getCityCenter() == null) {
-                crew.resign();
+                crew.resign(uuid);
             }
 
         while(Upbeat.losers.contains(nextState.getCrew()))

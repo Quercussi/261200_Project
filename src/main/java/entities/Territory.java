@@ -2,6 +2,7 @@ package entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ public class Territory {
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < cols; j++)
-                graph[i][j] = new Tile(0, new Position(i + 1, j + 1));
+                graph[i][j] = new Tile(0, Position.of(i, j));
         }
     }
 

@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // endpoint path used for client to establish WebSocket connection with server
         // ws://ipaddr:port/demo-websocket
-        registry.addEndpoint("/demo-websocket")
+        registry.addEndpoint("/g14-websocket")
                 .setAllowedOriginPatterns("*"); // accept cross-origin requests from any origin
     }
 }

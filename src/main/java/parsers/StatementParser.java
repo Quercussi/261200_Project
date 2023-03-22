@@ -20,17 +20,12 @@ public class StatementParser {
         stm = parseConstructionPlan();
     }
 
-    /** Executes the statement
-     * @param crew is the CityCrew which execute the construction plan.
-     * @param territory is Territory which hosts the game.
-     * @throws SyntaxError if the statement is illegal.
+    /** Compiles the input construction plan
+     * @return the root statement of the code
+     * @throws SyntaxError if there exists a syntax error within the code.
      */
-    public void execute(Map<String,Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
-        if(bindings == null)
-            bindings = new HashMap<>();
-
-        bindings.put("done",0L);
-        stm.execute(bindings, crew, territory, alterations);
+    public Statement compile() {
+        return stm;
     }
 
     private Statement parseConstructionPlan() throws SyntaxError {

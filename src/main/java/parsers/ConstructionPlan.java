@@ -17,14 +17,14 @@ class ConstructionPlan implements Statement{
     }
 
     public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
+        bindings.put("done",0L);
         for(Statement stm : stmList){
             Long isDone = bindings.get("done");
-            if(isDone == null)
-                bindings.put("done",0L);
             if(isDone != 0)
                 return;
             
             stm.execute(bindings, crew, territory, alterations);
         }
+        bindings.remove("done");
     }
 }
