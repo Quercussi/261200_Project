@@ -24,4 +24,12 @@ class IntLit implements Expression {
             return false ;
         }
     }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        IntLit cmpExpr = (IntLit) node;
+        return this.val == cmpExpr.val;
+    }
 }

@@ -37,5 +37,8 @@ class OpponentExpr implements Expression {
         return 0;
     }
 
+    public boolean equals(Node node) {
+        return this.getClass().getName().equals(node.getClass().getName());
+    }
     static private final Direction[] directions = {up, upleft, downleft, down, downright, upright};
 }

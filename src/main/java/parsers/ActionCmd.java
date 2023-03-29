@@ -22,7 +22,7 @@ class ActionCmd implements Statement{
         }
     }
 
-    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) {
         switch (command){
             case relocate -> {
                 bindings.put("done", 1L);
@@ -39,11 +39,17 @@ class ActionCmd implements Statement{
 
                 crew.setCityCenter(newCityCenter);
                 crew.withdraw(cost);
-                alterations.add(new Alteration(crew,oldCityCenter, Alteration.ActionType.relocate));
             }
 
             case done -> bindings.put("done",1L);
         }
     }
 
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        ActionCmd cmpCmd = (ActionCmd) node;
+        return (this.command == cmpCmd.command);
+    }
 }

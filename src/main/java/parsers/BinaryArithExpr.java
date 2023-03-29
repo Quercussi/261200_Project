@@ -37,4 +37,12 @@ class BinaryArithExpr implements Expression {
             }
         }
     }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        BinaryArithExpr cmpExpr = (BinaryArithExpr) node;
+        return this.left.equals(cmpExpr.left) && this.right.equals(cmpExpr.right) && this.operator.equals(cmpExpr.operator);
+    }
 }

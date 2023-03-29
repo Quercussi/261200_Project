@@ -1,6 +1,7 @@
 package parsers;
 
 import entities.*;
+import orchestrator.Upbeat;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ class AttackCmd implements Statement{
         this.expr = expr;
     }
 
-    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) {
         Tile target = territory.getTileAt(crew.getPositionAt(dir));
 
         long expenditure = expr.evaluate(bindings, crew, territory);
@@ -39,6 +40,16 @@ class AttackCmd implements Statement{
         target.withdraw(Math.min(expenditure, maximumExpenditure));
 
         target.updateOwnership(target.getOwner());
-        alterations.add(new Alteration(crew, target, Alteration.ActionType.shoot));
+
+        if(Upbeat.crews.size() <= 1)
+            bindings.put("done", 1L);
+    }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        AttackCmd cmpCmd = (AttackCmd) node;
+        return (this.dir == cmpCmd.dir) && this.expr.equals(cmpCmd.expr);
     }
 }

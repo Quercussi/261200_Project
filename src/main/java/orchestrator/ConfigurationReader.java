@@ -50,7 +50,7 @@ public class ConfigurationReader {
 
         try {
             Statement configStatement = new StatementParser(strConfig).compile();
-            configStatement.execute(config,null,null,null);
+            configStatement.execute(config,null,null);
 
         } catch (SyntaxError e) { throw new IllegalConfiguration(e.getMessage()); }
 

@@ -1,11 +1,7 @@
 package parsers;
 
-import entities.*;
-
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 public class StatementParser {
     private final Tokenizer tkn;
@@ -22,14 +18,13 @@ public class StatementParser {
 
     /** Compiles the input construction plan
      * @return the root statement of the code
-     * @throws SyntaxError if there exists a syntax error within the code.
      */
     public Statement compile() {
         return stm;
     }
 
     private Statement parseConstructionPlan() throws SyntaxError {
-        LinkedList<Statement> stmList = new LinkedList<>();
+        List<Statement> stmList = new LinkedList<>();
         do stmList.add(parseStatement());
         while (tkn.hasNextToken());
 
@@ -151,7 +146,7 @@ public class StatementParser {
 
     private BlockStatement parseBlockStatement() throws SyntaxError {
         // token character is now {
-        LinkedList<Statement> l = new LinkedList<>() ;
+        List<Statement> l = new LinkedList<>() ;
         while(!tkn.peek("}")){
             l.add(parseStatement()) ;
         }

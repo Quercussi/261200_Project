@@ -15,50 +15,28 @@
   border: solid;
 }
 
-.constructionplaninput {
-  position: absolute;
-  bottom: -23%;
-  right: -16%;
-  width: 500px;
-  height: 350px;
-  font-size: 15px;
-  font-family: '"Fira code", "Fira Mono", monospace';
-  border: none;
-  background-color: white;
-  border-radius: 30px;
-  z-index: 1000;
-}
-
 .territory {
-  width: 60vw;
-  height: 60vh;
-  display: flex;
+  width: 100vw;
+  height: 100vh;
   overflow: hidden;
-  border-radius: 30px;
-  background: #867070;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 0;
-  margin: 0;
-  justify-content: center;
-  align-items: center;
-  perspective: 500px;
+  background: #424549;
+  padding: 0px;
+  margin: 0px;
   position: relative;
-  margin-top: 10%;
 }
 
 .area {
   position: fixed;
-  padding: 10px;
+  padding: 17500px;
   top: 50%;
   left: 50%;
-  margin-top: -100px;
   margin-left: -250px;
-  width: 500vw;
-  height: 300vh;
+  margin-top: -100px;
+  width: 17500px;
+  height: 20000px;
 }
 
-.zoomin {
+/* .zoomin {
   position: absolute;
   top: 16.2%;
   left: 75%;
@@ -80,9 +58,9 @@
   font-size: 25px;
   font-weight: bold;
   background-color: #146c94;
-}
+} */
 
-.zoomin:hover {
+/* .zoomin:hover {
   border: solid;
   background-color: #f6f1f1;
 }
@@ -90,4 +68,10 @@
 .zoomout:hover {
   border: solid;
   background-color: #f6f1f1;
+} */
+
+.flex-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100vw;
 }

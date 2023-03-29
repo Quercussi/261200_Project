@@ -3,6 +3,9 @@ package entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import orchestrator.Upbeat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tile implements Coordinated{
     private CityCrew owner ;
 
@@ -45,15 +48,16 @@ public class Tile implements Coordinated{
                 return;
             }
 
-            // <resigning>
+            // Lazy Resignation
             if(crew.getCityCenter() == null) {
                 Upbeat.crews.remove(crew);
                 Upbeat.losers.add(crew);
 
                 for(Tile tile : crew.getOwnedTiles())
                     tile.setOwner(null);
+
+                crew.getOwnedTiles().clear();
             }
-            // </resigning>
 
             crew.removeTile(this);
             if(crew.getCityCenter() == this)

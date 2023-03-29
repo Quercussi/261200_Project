@@ -25,6 +25,8 @@ public class Upbeat {
     private static long init_budget;
     private static long init_center_dep;
     private static long rev_cost;
+    private static long init_rev_time;
+    private static long plan_rev_time;
 
     public static List<Tile> vacantTile;
 
@@ -62,6 +64,8 @@ public class Upbeat {
         init_center_dep = config.get("init_center_dep");
         init_budget = config.get("init_budget");
         rev_cost = config.get("rev_cost");
+        init_rev_time = config.get("init_plan_min")*60 + config.get("init_plan_sec");
+        plan_rev_time = config.get("plan_rev_min")*60 + config.get("plan_rev_sec");
     }
 
     public static void checkConfigValidity(Map<String,Long> config) throws MissingConfigurationVariable, IllegalConfiguration {
@@ -121,6 +125,8 @@ public class Upbeat {
     public static Territory getTerritory() { return game; }
 
     public static void setStates() {
+        game.setCrews(crews);
+
         State[] states = new State[crews.size()];
 
         int statesCount = states.length;
@@ -140,6 +146,8 @@ public class Upbeat {
     }
 
     public static long get_rev_cost() { return rev_cost; }
+    public static long get_init_rev_time() { return init_rev_time; }
+    public static long get_plan_rev_time() { return plan_rev_time; }
 
     public static CityCrew getCrewWith(int crewId) {
         CityCrew crew = null;
@@ -169,7 +177,7 @@ public class Upbeat {
         return gameState;
     }
 
-    private static final Random rand = new Random();
+    public static final Random rand = new Random();
 
     private static <E> E popRandomElement(List<E> list) {
         int size = list.size();

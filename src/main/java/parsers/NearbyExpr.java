@@ -34,4 +34,12 @@ class NearbyExpr implements Expression{
         }
         return 0;
     }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        NearbyExpr cmpExpr = (NearbyExpr) node;
+        return this.dir == cmpExpr.dir;
+    }
 }

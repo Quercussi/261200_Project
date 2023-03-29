@@ -12,8 +12,7 @@ public interface Statement extends Node {
      * @param bindings    is a map from identifiers to integers.
      * @param crew        is the CityCrew which execute the construction plan.
      * @param territory   is the Territory which hosts the game.
-     * @param alterations
      * @throws SyntaxError if the statement cannot be executed.
      */
-    void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations);
+    void execute(Map<String, Long> bindings, CityCrew crew, Territory territory);
 }

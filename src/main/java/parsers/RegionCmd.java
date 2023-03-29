@@ -24,7 +24,7 @@ class RegionCmd implements Statement{
         this.expr = expr;
     }
 
-    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) {
         long budget = crew.getBudget();
         long expenditure = expr.evaluate(bindings, crew, territory);
         Tile tile = territory.getTileAt(crew);
@@ -48,7 +48,6 @@ class RegionCmd implements Statement{
                 // all correct
                 tile.withdraw(expenditure);
                 crew.deposit(expenditure);
-                alterations.add(new Alteration(crew,tile, Alteration.ActionType.collect));
             }
 
             case invest -> {
@@ -62,11 +61,18 @@ class RegionCmd implements Statement{
                 crew.withdraw(expenditure);
                 double maxDeposit = territory.getMaxDeposit() - expenditure;
                 tile.deposit(Math.min(expenditure, maxDeposit));
-                alterations.add(new Alteration(crew,tile, Alteration.ActionType.invest));
             }
         }
 
         tile.updateOwnership(crew);
+    }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        RegionCmd cmpCmd = (RegionCmd) node;
+        return (this.command == cmpCmd.command) && this.expr.equals(cmpCmd.expr);
     }
 
     private boolean hasOwnedAdjacentTile(CityCrew crew, Territory territory) {

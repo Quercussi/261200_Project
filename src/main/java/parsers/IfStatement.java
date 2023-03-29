@@ -15,11 +15,19 @@ class IfStatement implements Statement{
         this.elsestatement = elsestatement ;
     }
 
-    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) {
         if(expression.evaluate(bindings, crew, territory) > 0){
-            ifstatement.execute(bindings, crew, territory, alterations);
+            ifstatement.execute(bindings, crew, territory);
         }else{
-            elsestatement.execute(bindings, crew, territory, alterations);
+            elsestatement.execute(bindings, crew, territory);
         }
+    }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        IfStatement cmpStm = (IfStatement) node;
+        return this.ifstatement.equals(cmpStm.ifstatement) && this.elsestatement.equals(cmpStm.elsestatement);
     }
 }

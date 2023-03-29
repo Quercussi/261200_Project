@@ -19,7 +19,7 @@ class MoveCmd implements Statement{
         this.dir = dir;
     }
 
-    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) {
         long budget = crew.getBudget();
         int cost = 1;
         crew.withdraw(cost);
@@ -42,6 +42,13 @@ class MoveCmd implements Statement{
             return;
 
         crew.moveTo(tileOverThere);
-        alterations.add(new Alteration(crew, tileOverThere, Alteration.ActionType.move));
+    }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        MoveCmd cmpCmd = (MoveCmd) node;
+        return (this.dir == cmpCmd.dir);
     }
 }

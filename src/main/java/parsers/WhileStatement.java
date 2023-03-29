@@ -14,7 +14,7 @@ class WhileStatement implements Statement{
         this.statement = statement ;
     }
 
-    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) {
         int count = 0;
         while (expression.evaluate(bindings, crew, territory) > 0){
             Long isDone = bindings.get("done");
@@ -23,9 +23,17 @@ class WhileStatement implements Statement{
             if(isDone != 0)
                 return;
 
-            statement.execute(bindings, crew, territory, alterations);
+            statement.execute(bindings, crew, territory);
             if(++count >= 10000)
                 break;
         }
+    }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        WhileStatement cmpStm = (WhileStatement) node;
+        return this.expression.equals(cmpStm.expression) && this.statement.equals(cmpStm.statement);
     }
 }

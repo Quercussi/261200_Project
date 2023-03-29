@@ -36,7 +36,6 @@ public class Position implements Coordinated {
     @JsonIgnore
     public Position getPosition(){ return this ;}
 
-
     @Override
     public int getRow() { return row; }
 

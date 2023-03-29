@@ -34,10 +34,10 @@ public class Territory {
         long rows = config.get("m");
         long cols = config.get("n");
 
-        if(row < 1 || row > rows || col < 1 || col > cols)
+        if(row < 0 || row >= rows || col < 0 || col >= cols)
             return null;
 
-        return graph[position.getRow()-1][position.getCol()-1] ;
+        return graph[position.getRow()][position.getCol()] ;
     }
 
     public Tile[][] getGraph(){ return graph ;}
