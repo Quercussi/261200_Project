@@ -11,6 +11,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
+import org.springframework.messaging.simp.annotation.SubscribeMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import parsers.SyntaxError;
@@ -29,10 +30,13 @@ public class JoiningController {
     @SendTo("/topic/joinedUsers")
     public Object getUsers() { return Upbeat.crews; }
 
+    @SubscribeMapping("joinedUsers")
+    public Object autoGetUsers() { return Upbeat.crews; }
+
     @MessageMapping("/join")
     @SendToUser("/queue/token")
     public Object pushUser(@Header("simpSessionId") String sessionId, @Payload String username, Principal user){
-        System.out.println(sessionId);
+        System.out.println("A new session connected: " + sessionId);
 
         if(Upbeat.getGameState() == Upbeat.GameState.configSetting)
             Upbeat.gameState = Upbeat.GameState.joining;
@@ -48,12 +52,26 @@ public class JoiningController {
                 return Map.of("isOkay",false,"message","No more players can join.");
 
             crews.add(newCrew);
+
+            //Set color for crews
+            int colorCount = CityCrew.defaultColorScheme.length;
+            int crewCount = crews.size();
+            for(int i = 0; i < colorCount && i < crewCount; i++)
+                crews.get(i).setColor(CityCrew.defaultColorScheme[i]);
+
+            for(int i = colorCount; i < crewCount; i++) {
+                StringBuilder colorSB = new StringBuilder("#");
+                int colorInt = Upbeat.rand.nextInt(0xFFFFFF+1);
+                colorSB.append(Integer.toHexString(colorInt));
+                crews.get(i).setColor(colorSB.toString());
+            }
+
             template.convertAndSend("/topic/joinedUsers",crews);
             template.convertAndSend("/topic/gameState",Upbeat.getGameState());
         } catch (SyntaxError | RuntimeException e)
-        {/*It just cannot create an error*/ System.out.println(e.getMessage());}
+        {/*It just cannot create an error*/ System.out.println("Error from convertAndSend: " + e.getMessage());}
 
-        return Map.of("isOkay",true,"token",uuid,"crewId",nextCrewId);
+        return Map.of("isOkay",true,"uuid",uuid,"crewId",nextCrewId);
     }
 
     @EventListener
@@ -72,7 +90,13 @@ public class JoiningController {
         disconnectedCrew.setCityCenter(null);
         for(Tile tile : disconnectedCrew.getOwnedTiles())
             tile.setOwner(null);
+        disconnectedCrew.getOwnedTiles().clear();
+
+        if(Upbeat.currentState.getCrew() == disconnectedCrew)
+            Upbeat.currentState.incrementState();
 
         template.convertAndSend("/topic/joinedUsers",Upbeat.crews);
+        template.convertAndSend("/topic/territory",Map.of("isOkay",true,"territory",Upbeat.game));
+        template.convertAndSend("/topic/state",Upbeat.currentState);
     }
 }

@@ -25,6 +25,11 @@ public class CityCrew implements Coordinated {
     private final Map<String,Long> bindings;
     private String str_construction_plan;
     private Statement construction_plan;
+    private String color;
+    private CountdownClock countdownClock;
+
+    public static final String[] defaultColorScheme = {"#F2003C","#1F75FE","#FFD300","#66FF00","#0000CD","#FF1493","#BF00FF","#D2691E"};
+
     public CityCrew(String name, int id, String uuid, String sessionId, long initial_budget, Tile cityCenter, String str_construction_plan) throws SyntaxError {
         this.name = name ;
         this.id = id;
@@ -47,6 +52,8 @@ public class CityCrew implements Coordinated {
         this.uuid = Base64.getEncoder().encodeToString(uuid_hash);
         byte[] sessionId_hash = digest.digest(sessionId.getBytes(StandardCharsets.UTF_8));
         this.sessionId = Base64.getEncoder().encodeToString(sessionId_hash);
+
+        countdownClock = new CountdownClock(this, (int) (Upbeat.get_init_rev_time() * 10), uuid);
     }
 
     public Map<String,Long> getBindings() { return bindings; }
@@ -59,13 +66,17 @@ public class CityCrew implements Coordinated {
             throw new InvalidToken("The input token is incorrect.");
 
         this.str_construction_plan = str_construction_plan;
-        this.construction_plan = new StatementParser(str_construction_plan).compile();
+        Statement newConstructionPlan = new StatementParser(str_construction_plan).compile();
+        if(newConstructionPlan.equals(this.construction_plan))
+            throw new InvalidToken("Repeated construction plan");
+
+        this.construction_plan = newConstructionPlan;
     }
 
     public String getName() { return name; }
     public int getId() { return id; }
     @JsonIgnore
-    public String getUuid() { return uuid; }
+    private String getUuid() { return uuid; }
     public long getBudget() { return budget; }
     public void withdraw(long budget) {
         this.budget -= budget;
@@ -76,7 +87,9 @@ public class CityCrew implements Coordinated {
     public Tile getCityCenter() { return cityCenter; }
     public void setCityCenter(Tile cityCenter) { this.cityCenter = cityCenter; }
 
-    public void moveTo(Coordinated position){ this.position = position.getPosition() ;}
+    public void moveTo(Coordinated position){
+        this.position = position.getPosition() ;
+    }
 
     public void addTile(Tile tile){
         ownedTiles.add(tile) ;
@@ -89,20 +102,42 @@ public class CityCrew implements Coordinated {
     public void incrementTurn() { turn++; }
     public int getTurn() { return turn; }
 
+    @JsonIgnore
+    public CountdownClock getCountdownClock() { return countdownClock; }
+    public void setCountdownClock(CountdownClock countdownClock) { this.countdownClock = countdownClock; }
+
+    public void startCountdown() {
+        countdownClock.startCountdown();
+    }
+    public void stopCountdown() {
+        countdownClock.stopCountdown();
+    }
+
+    public double getTimeLeft() {
+        return countdownClock.getTimeLeft();
+    }
+
+    public void setColor(String color) { this.color = color; }
+    public String getColor() { return color; }
+
     public void resign(String uuid) throws InvalidToken {
         if(!correctUUID(uuid))
             throw new InvalidToken("The input token is incorrect.");
 
-        if(getCityCenter() == null) {
-            Upbeat.crews.remove(this);
-            Upbeat.losers.add(this);
+        cityCenter = null;
+        Upbeat.crews.remove(this);
+        Upbeat.losers.add(this);
 
-            for(Tile tile : getOwnedTiles())
-                tile.setOwner(null);
-        }
+        for(Tile tile : getOwnedTiles())
+            tile.setOwner(null);
+        getOwnedTiles().clear();
+
+        if(Upbeat.currentState.getCrew() == this)
+            Upbeat.currentState.incrementState();
     }
 
     public boolean correctUUID(String inputUUID) {
+        if (inputUUID == null) return false;
         byte[] hash = digest.digest(inputUUID.getBytes(StandardCharsets.UTF_8));
         return this.uuid.equals(Base64.getEncoder().encodeToString(hash));
     }

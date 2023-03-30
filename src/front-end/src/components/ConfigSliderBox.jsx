@@ -51,7 +51,7 @@ export default function ConfigSliderBox(props) {
       <ConfigSlider
         title={"Number of rows"}
         defaultValue={m}
-        min={1}
+        min={2}
         max={100}
         step={1}
         setConfig={setm}
@@ -59,7 +59,7 @@ export default function ConfigSliderBox(props) {
       <ConfigSlider
         title={"Number of columns"}
         defaultValue={n}
-        min={1}
+        min={2}
         max={100}
         step={1}
         setConfig={setn}

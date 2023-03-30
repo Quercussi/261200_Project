@@ -23,6 +23,7 @@ export default function SetupGame() {
     interest_pct: 5,
   });
 
+  // INITIATE CLIENT
   useEffect(() => {
     if (!client) {
       client = new Client({
@@ -31,7 +32,8 @@ export default function SetupGame() {
         onConnect: async () => {
           await client.subscribe("/topic/config", (message) => {
             const body = JSON.parse(message.body);
-            const tempConfig = body;
+            if (!body.isOkay) return;
+            const tempConfig = body.config;
             tempConfig.init_plan_time =
               tempConfig.init_plan_min * 60 + tempConfig.init_plan_sec;
             tempConfig.plan_rev_time =
@@ -45,6 +47,25 @@ export default function SetupGame() {
             console.log(body);
             setGameState(body);
           });
+
+          // INITIALIZE ENDPOINTS
+          await client.subscribe("/app/gameState", (message) => {
+            const body = JSON.parse(message.body);
+            console.log(body);
+            setGameState(body);
+          });
+
+          await client.subscribe("/app/config", (message) => {
+            const body = JSON.parse(message.body);
+            if (!body.isOkay) return;
+            const tempConfig = body.config;
+            tempConfig.init_plan_time =
+              tempConfig.init_plan_min * 60 + tempConfig.init_plan_sec;
+            tempConfig.plan_rev_time =
+              tempConfig.plan_rev_min * 60 + tempConfig.plan_rev_sec;
+            setConfig(tempConfig);
+          });
+
           await client.publish({ destination: "/app/getGameState" });
         },
       });
@@ -69,6 +90,27 @@ export default function SetupGame() {
         body: JSON.stringify(config),
       });
   };
+
+  // IN CASE THE WEBSOCKET IS INITIATED
+  useEffect(() => {
+    if (!client.connected) return;
+    client.subscribe("/app/gameState", (message) => {
+      const body = JSON.parse(message.body);
+      console.log(body);
+      setGameState(body);
+    });
+
+    client.subscribe("/app/config", (message) => {
+      const body = JSON.parse(message.body);
+      if (!body.isOkay) return;
+      const tempConfig = body;
+      tempConfig.init_plan_time =
+        tempConfig.init_plan_min * 60 + tempConfig.init_plan_sec;
+      tempConfig.plan_rev_time =
+        tempConfig.plan_rev_min * 60 + tempConfig.plan_rev_sec;
+      setConfig(tempConfig);
+    });
+  }, []);
 
   return (
     <div>

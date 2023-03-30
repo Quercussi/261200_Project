@@ -46,45 +46,53 @@ class Identifier implements Expression{
         }
     }
 
-        private static final Pattern pattern = Pattern.compile("[a-zA-Z_$][\\w$]*");
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        Identifier cmpExpr = (Identifier) node;
+        return this.name.equals(cmpExpr.name);
+    }
+
+    private static final Pattern pattern = Pattern.compile("[a-zA-Z_$][\\w$]*");
 
     /** Check if the input name is legal for an identifier
-         * @param name is the name of an identifier
-         * @return true if the input name can be an identifier name
-         */
-        public static boolean isLegalName(String name){
-            Matcher matcher = pattern.matcher(name);
+     * @param name is the name of an identifier
+     * @return true if the input name can be an identifier name
+     */
+    public static boolean isLegalName(String name){
+        Matcher matcher = pattern.matcher(name);
 
-            boolean isEmpty = name.isEmpty();
-            boolean isReserved = reservedWords.contains(name);
-            boolean illegalGeneral = !matcher.matches();
-            return !(isEmpty || isReserved || illegalGeneral);
-        }
-
-        /** Check if the input character can be used in an identifier name
-         * @param ch is checking character
-         * @return true if the input character can be used in an identifier name
-         */
-        public static boolean isIdentifierChar(char ch) {
-            return Character.isLetterOrDigit(ch) || ch == '_' || ch == '$';
-        }
-        // We allow underscore ('_') and dollar sign ('$') for naming identifier.
-
-        /** Check if the input name is the name of a Special Variable
-         * @param name is the name of an identifier
-         * @return true if the input name is the name of a Special Variable
-         */
-        public static boolean isSpecialVariable(String name){
-            return name.equals("rows") || name.equals("cols") ||
-                    name.equals("currow") || name.equals("curcol") ||
-                    name.equals("budget") || name.equals("deposit") ||
-                    name.equals("int") || name.equals("maxdeposit") ||
-                    name.equals("random");
-        }
-
-        public static Set<String> reservedWords = Set.of("collect","done","down",
-                "downleft","downright","else","if","invest","move","nearby","opponent",
-                "relocate","shoot","then","up","upleft","upright","while");
-
-        private static final Random rand = new Random();
+        boolean isEmpty = name.isEmpty();
+        boolean isReserved = reservedWords.contains(name);
+        boolean illegalGeneral = !matcher.matches();
+        return !(isEmpty || isReserved || illegalGeneral);
     }
+
+    /** Check if the input character can be used in an identifier name
+     * @param ch is checking character
+     * @return true if the input character can be used in an identifier name
+     */
+    public static boolean isIdentifierChar(char ch) {
+        return Character.isLetterOrDigit(ch) || ch == '_' || ch == '$';
+    }
+    // We allow underscore ('_') and dollar sign ('$') for naming identifier.
+
+    /** Check if the input name is the name of a Special Variable
+     * @param name is the name of an identifier
+     * @return true if the input name is the name of a Special Variable
+     */
+    public static boolean isSpecialVariable(String name){
+        return name.equals("rows") || name.equals("cols") ||
+                name.equals("currow") || name.equals("curcol") ||
+                name.equals("budget") || name.equals("deposit") ||
+                name.equals("int") || name.equals("maxdeposit") ||
+                name.equals("random");
+    }
+
+    public static Set<String> reservedWords = Set.of("collect","done","down",
+            "downleft","downright","else","if","invest","move","nearby","opponent",
+            "relocate","shoot","then","up","upleft","upright","while");
+
+    private static final Random rand = new Random();
+}

@@ -22,10 +22,18 @@ class AssignStatement implements Statement{
         this.expr = expr;
     }
 
-    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory, List<Alteration> alterations) {
+    public void execute(Map<String, Long> bindings, CityCrew crew, Territory territory) {
         if(Identifier.isSpecialVariable(name) || Identifier.reservedWords.contains(name))
             return;
 
         bindings.put(name, expr.evaluate(bindings, crew, territory));
+    }
+
+    public boolean equals(Node node) {
+        if (!this.getClass().getName().equals(node.getClass().getName()))
+            return false;
+
+        AssignStatement cmpCmd = (AssignStatement) node;
+        return (this.name.equals(cmpCmd.name) && this.expr.equals(cmpCmd.expr));
     }
 }

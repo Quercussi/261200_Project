@@ -27,19 +27,31 @@ public interface Coordinated {
      * @return the position at the input direction
      */
     default Position getPositionAt(Direction Dir) {
-        int row = getRow();
-        int col = getCol();
+        int row = getRow()+1;
+        int col = getCol()+1;
 
         switch (Dir) {
-            case up -> { return Position.of(row-1, col); }
-            case down -> { return Position.of(row+1, col); }
-            case upright -> { return Position.of(row-(col%2==0 ? 1 : 0),col+1); }
-            case downright -> { return Position.of(row+(col%2==0 ? 0 : 1),col+1); }
-            case upleft -> { return Position.of(row-(col%2==0 ? 1 : 0),col-1); }
-            case downleft -> { return Position.of(row+(col%2==0 ? 0 : 1),col-1); }
+            case up -> row--;
+            case down -> row++;
+            case upright -> {
+                row -= (col%2==0 ? 1 : 0);
+                col++;
+            }
+            case downright -> {
+                row += (col%2==0 ? 0 : 1);
+                col++;
+            }
+            case upleft -> {
+                row -= (col%2==0 ? 1 : 0);
+                col--;
+            }
+            case downleft -> {
+                row += (col%2==0 ? 0 : 1);
+                col--;
+            }
         }
 
-        return null;
+        return Position.of(row-1,col-1);
     }
 
     /** Calculate the distance between two coordinated object
@@ -48,10 +60,10 @@ public interface Coordinated {
      * @return the distance between two coordinated object
      */
     default int distanceTo(Coordinated coordinated) {
-        int row1 = this.getRow();
-        int col1 = this.getCol();
-        int row2 = coordinated.getRow();
-        int col2 = coordinated.getCol();
+        int row1 = this.getRow()+1;
+        int col1 = this.getCol()+1;
+        int row2 = coordinated.getRow()+1;
+        int col2 = coordinated.getCol()+1;
 
         // This function works by calculating the manhattan distance.
         // Then subtract the distance by the number of diagonal lines accessed.
