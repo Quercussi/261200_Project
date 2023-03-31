@@ -156,7 +156,7 @@ export default function JoinPage() {
       <input
         className="inputname"
         type="text"
-        placeholder="enter your name here..."
+        placeholder="Enter your name here..."
         onChange={(e) => setName(e.target.value)}
         value={name}
       />
@@ -186,7 +186,7 @@ export default function JoinPage() {
         );
       })}
       <br />
-      <button className="btnstartgame" onClick={() => gameStartHandler()}>
+      <button className="btnstartgame1" onClick={() => gameStartHandler()}>
         Start game
       </button>
     </div>

@@ -1,4 +1,4 @@
-.btnstartgame {
+.btnstartgame1 {
   position: absolute;
   top: 500px;
   left: 34%;
@@ -8,10 +8,18 @@
   width: 500px;
   font-size: 50px;
   font-weight: bold;
+  font-family: "Rouge Script";
 }
 
-.btnstartgame:hover {
-  background-color: #ffdd83;
+.btnstartgame1:hover {
+  background-image: linear-gradient(
+    #845ec2,
+    #d65db1,
+    #ff6f91,
+    #ff9671,
+    #ffc75f,
+    #f9f871
+  );
   border: solid;
 }
 
@@ -22,6 +30,7 @@
   width: 400px;
   height: 60px;
   font-size: 30px;
+  font-family: Georgia, serif;
 }
 
 .btnjoin {
@@ -31,12 +40,14 @@
   width: 400px;
   font-size: 40px;
   font-weight: bold;
+  font-family: system-ui;
   color: whitesmoke;
   background: black;
 }
 
 .btnjoin:hover {
-  background: #e96479;
+  background-color: #fbab7e;
+  background-image: linear-gradient(62deg, #fbab7e 0%, #f7ce68 100%);
   color: black;
   border: solid;
 }
@@ -58,6 +69,8 @@
   left: 33.5%;
   font-size: 80px;
   font-weight: bold;
+  font-family: cursive;
+  color: #645cbb;
 }
 
 .waiting {
@@ -70,6 +83,7 @@
   top: 80px;
   left: 3.5%;
   font-size: 20px;
+  font-family: Georgia, serif;
   font-weight: bold;
 }
 
@@ -79,5 +93,6 @@
   left: 3%;
   width: 320px;
   padding: 1px 15px;
-  background-color: #ffaacf;
+  background-color: #ffe53b;
+  background-image: linear-gradient(147deg, #ffe53b 0%, #ff2525 74%);
 }
