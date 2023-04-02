@@ -13,6 +13,12 @@ export default function ConstructionPlanBar(props) {
     console.log(editorRef.current.getValue());
   }, [editorRef]);
 
+  const compileMessageColor = (compileMsg) => {
+    if (compileMsg.isOkay) return "#00FF40";
+    if (compileMsg.message === "Repeated construction plan") return "yellow";
+    else return "red";
+  };
+
   return (
     <div className="constructionplan-container">
       <Editor
@@ -24,8 +30,11 @@ export default function ConstructionPlanBar(props) {
         onMount={handleEditorDidMount}
         onChange={(val, e) => props.setConstructionPlan(val)}
       />
-      <div>
-        <div className="compile-message">
+      <div className="constructionplanEvents-container">
+        <div
+          className="compile-message"
+          style={{ backgroundColor: compileMessageColor(props.compileMessage) }}
+        >
           <p>{props.compileMessage.message}</p>
         </div>
         <button

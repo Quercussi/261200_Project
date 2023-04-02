@@ -96,7 +96,7 @@ public class ExecutionController {
 
         crew.withdraw(rev_cost);
         getTerritoryManually(); // To update crews budget
-        return Map.of("isOkay",true,"constructionPlan",crew.getConstructionPlanStr());
+        return Map.of("isOkay",true,"constructionPlan",crew.getConstructionPlanStr() , "message", "Construction Plan is revised successfully.");
     }
 
     private void getTerritoryManually() {

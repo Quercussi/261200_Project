@@ -141,7 +141,8 @@ public class StatementParser {
     private Direction parseDirection() throws SyntaxError {
         // This method will check for invalid direction automatically.
         String strDir = tkn.consume();
-        return Direction.getDir(strDir);
+        try { return Direction.getDir(strDir); }
+        catch (SyntaxError e) { throw new SyntaxError(e.getMessage(), tkn.getLine());}
     }
 
     private BlockStatement parseBlockStatement() throws SyntaxError {

@@ -26,6 +26,7 @@ public class Tile implements Coordinated{
     @JsonIgnore
     public CityCrew getOwner(){ return owner ;}
     public Integer getOwnerId() { return (owner == null) ? null : owner.getId(); }
+    public String getOwnerName() { return (owner == null) ? null : owner.getName(); }
     public double getDeposit() { return deposit; }
 
     public void withdraw(double withdraw) {
