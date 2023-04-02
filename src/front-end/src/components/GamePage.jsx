@@ -36,24 +36,28 @@ export default function Game(props) {
 
   return (
     <div className="flex-container">
-      <div>
-        <DragSizing
-          border="right"
-          style={{ minWidth: "15vw", maxWidth: "50vw", width: "25vw" }}
-        >
-          {!props.crewId ? (
-            ""
-          ) : (
-            <ConstructionPlanBar
-              backConstructionPlan={props.backConstructionPlan}
-              constructionPlan={props.constructionPlan}
-              setConstructionPlan={props.setConstructionPlan}
-              postConstructionPlan={props.postConstructionPlan}
-              compileMessage={props.compileMessage}
-            />
-          )}
-        </DragSizing>
-      </div>
+      {!props.crewId ? (
+        ""
+      ) : (
+        <div>
+          <DragSizing
+            border="right"
+            style={{ minWidth: "15vw", maxWidth: "50vw", width: "25vw" }}
+          >
+            {!props.crewId ? (
+              ""
+            ) : (
+              <ConstructionPlanBar
+                backConstructionPlan={props.backConstructionPlan}
+                constructionPlan={props.constructionPlan}
+                setConstructionPlan={props.setConstructionPlan}
+                postConstructionPlan={props.postConstructionPlan}
+                compileMessage={props.compileMessage}
+              />
+            )}
+          </DragSizing>
+        </div>
+      )}
 
       <div className="territory" onWheel={(event) => wheelZoomHandler(event)}>
         <div style={{ transform: `scale(${scale})` }}>
