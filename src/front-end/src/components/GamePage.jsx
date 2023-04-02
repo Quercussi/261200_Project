@@ -5,10 +5,12 @@ import CrewBar from "./CrewBar";
 import ConstructionPlanBar from "./ConstructionPlanBar";
 import { DragSizing } from "react-drag-sizing";
 import ResignBar from "./ResignBar";
+import ExecuteButton from "./ExecuteButton";
 
 export default function Game(props) {
   const [scale, setScale] = useState(0.3);
   const [executeButtonTrigger, setExecuteButtonTrigger] = useState(false);
+  const resignBarTrigger = props.crewId != undefined;
 
   useEffect(() => {
     const state = props.state;
@@ -16,9 +18,15 @@ export default function Game(props) {
     else setExecuteButtonTrigger(props.state.crew.id === props.crewId);
   }, [props.state]);
 
+  const wheelZoomHandler = (event) => {
+    if (event.deltaY > 0) zoomOut();
+    else zoomIn();
+  };
+
   const zoomIn = () => {
     if (scale < 1.5) setScale(scale * 1.2);
   };
+
   const zoomOut = () => {
     setScale(scale * 0.8);
     if (scale < 0) setScale(0.0005);
@@ -27,15 +35,15 @@ export default function Game(props) {
   const [positionOnCrew, setPositionOnCrew] = useState(undefined);
 
   return (
-    <div>
-      <div className="flex-container">
-        {!props.crewId ? (
-          ""
-        ) : (
-          <DragSizing
-            border="right"
-            style={{ minWidth: "10vw", maxWidth: "60vw", width: "23vw" }}
-          >
+    <div className="flex-container">
+      <div>
+        <DragSizing
+          border="right"
+          style={{ minWidth: "15vw", maxWidth: "50vw", width: "25vw" }}
+        >
+          {!props.crewId ? (
+            ""
+          ) : (
             <ConstructionPlanBar
               backConstructionPlan={props.backConstructionPlan}
               constructionPlan={props.constructionPlan}
@@ -43,36 +51,26 @@ export default function Game(props) {
               postConstructionPlan={props.postConstructionPlan}
               compileMessage={props.compileMessage}
             />
-          </DragSizing>
-        )}
-
-        <div
-          className="territory"
-          onWheel={(event) => {
-            if (event.deltaY > 0) zoomOut();
-            else zoomIn();
-          }}
-        >
-          <div style={{ transform: `scale(${scale})` }}>
-            <Territory
-              territory={props.territory}
-              draggingScale={scale}
-              positionOnCrew={positionOnCrew}
-            />
-          </div>
-          <ResignBar resign={props.resign} />
-          {executeButtonTrigger ? (
-            <button className="execute-button" onClick={() => props.execute()}>
-              EXECUTE
-            </button>
-          ) : (
-            ""
           )}
-        </div>
+        </DragSizing>
+      </div>
 
+      <div className="territory" onWheel={(event) => wheelZoomHandler(event)}>
+        <div style={{ transform: `scale(${scale})` }}>
+          <Territory
+            territory={props.territory}
+            draggingScale={scale}
+            positionOnCrew={positionOnCrew}
+          />
+        </div>
+        <ResignBar resign={props.resign} trigger={resignBarTrigger} />
+        <ExecuteButton execute={props.execute} trigger={executeButtonTrigger} />
+      </div>
+
+      <div>
         <DragSizing
           border="left"
-          style={{ minWidth: "10vw", maxWidth: "30vw", width: "23vw" }}
+          style={{ minWidth: "10vw", maxWidth: "30vw", width: "18vw" }}
         >
           <CrewBar
             crews={props.territory.crews}

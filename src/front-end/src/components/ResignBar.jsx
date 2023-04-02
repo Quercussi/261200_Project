@@ -11,7 +11,7 @@ export default function ResignBar(props) {
     <path d="M11.178 19.569a.998.998 0 001.644 0l9-13A.999.999 0 0021 5H3a1.002 1.002 0 00-.822 1.569l9 13z" />
   );
 
-  return (
+  return props.resignBarTrigger ? (
     <div className="resignBar">
       <ResignButton show={showResignButton} resign={props.resign} />
       <div
@@ -30,5 +30,7 @@ export default function ResignBar(props) {
         </svg>
       </div>
     </div>
+  ) : (
+    ""
   );
 }
