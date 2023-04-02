@@ -1,5 +1,5 @@
 body {
-  background-color: #ad7be9;
+  background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%);
 }
 
 .text {
@@ -24,11 +24,36 @@ body {
 .btnstart {
   position: absolute;
   top: 500px;
-  left: 14%;
+  left: 13%;
   padding: 10px 15px;
   color: black;
+  background-image: linear-gradient(
+    64.3deg,
+    rgba(254, 122, 152, 0.81) 17.7%,
+    rgba(255, 206, 134, 1) 64.7%,
+    rgba(172, 253, 163, 0.64) 112.1%
+  );
   border-radius: 50px;
+  border: none;
   width: 500px;
   font-size: 50px;
   font-weight: bold;
+  font-family: "Rouge Script";
+}
+
+.btnstart:hover {
+  background-image: radial-gradient(
+    circle farthest-corner at 10.2% 55.8%,
+    rgba(252, 37, 103, 1) 0%,
+    rgba(250, 38, 151, 1) 46.2%,
+    rgba(186, 8, 181, 1) 90.1%
+  );
+  border: solid;
+  border-color: black;
+  color: #d6d419;
+}
+
+.bg {
+  width: 1px;
+  height: 1px;
 }
