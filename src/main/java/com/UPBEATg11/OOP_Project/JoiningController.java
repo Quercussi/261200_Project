@@ -74,6 +74,28 @@ public class JoiningController {
         return Map.of("isOkay",true,"uuid",uuid,"crewId",nextCrewId);
     }
 
+    @MessageMapping("/echoBack")
+    @SendToUser("/queue/echoAck")
+    public Object pushUser(@Payload Map<String,Object> payload, Principal user){
+        String uuid = (String) payload.get("uuid");
+        Integer id = (Integer) payload.get("crewId");
+
+        if(uuid == null || id == null)
+            return Map.of("isOkay",false,"message","Missing key in the request body");
+
+        CityCrew crew = Upbeat.getCrewWith(id);
+
+        if(crew == null)
+            return Map.of("isOkay",false,"message","There is no such crewId within the game.");
+
+        if(!crew.correctUUID(uuid))
+            return Map.of("isOkay",false,"message","Incorrect UUID");
+
+        Upbeat.echoCheck.put(id,true);
+
+        return Map.of("isOkay",true);
+    }
+
     @EventListener
     public void handleSessionDisconnect(SessionDisconnectEvent event) {
         String sessionId = event.getSessionId();

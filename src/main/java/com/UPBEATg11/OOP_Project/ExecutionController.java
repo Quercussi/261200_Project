@@ -38,6 +38,7 @@ public class ExecutionController {
     @SendTo("/topic/gameState")
     public Object gameState() {
         CountdownClock.setSimpMessagingTemplate(template);
+        Upbeat.setSimpMessagingTemplate(template);
 
         if(Upbeat.getGameState() == Upbeat.GameState.joining)
             Upbeat.gameState = Upbeat.GameState.gameStart;

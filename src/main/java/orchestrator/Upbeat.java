@@ -1,6 +1,7 @@
 package orchestrator;
 
 import entities.*;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import parsers.SyntaxError;
 
 import java.io.FileNotFoundException;
@@ -19,6 +20,7 @@ public class Upbeat {
 
     public static State currentState;
     public static GameState gameState = GameState.configSetting;
+    private static SimpMessagingTemplate template;
 
     private static long rows;
     private static long cols;
@@ -30,6 +32,7 @@ public class Upbeat {
 
     public static List<Tile> vacantTile;
 
+    public static Map<Integer, Boolean> echoCheck = new HashMap<>();
     static final String BRAIN_DEAD_CONSTRUCTION_PLAN = "done";
 
 //    m=20
@@ -105,6 +108,7 @@ public class Upbeat {
     // Crews and Tiles Initialization
     public static CityCrew randomizedInitCrew(String name, int id, String uuid, String sessionId) throws SyntaxError {
         Tile cityCenter = popRandomElement(vacantTile);
+        echoCheck.put(id,false);
         if(cityCenter == null) return null;
 
         return initCrew(name, id,uuid, sessionId, BRAIN_DEAD_CONSTRUCTION_PLAN, cityCenter);
@@ -143,6 +147,51 @@ public class Upbeat {
         states[lastIndex].setNextState(states[0]);
 
         currentState = states[0]; // First State
+    }
+
+    public static void setSimpMessagingTemplate(SimpMessagingTemplate template) {
+        Upbeat.template = template;
+    }
+    public static void echo() {
+        if(template == null)
+            return;
+
+        echoCheck.replaceAll((i, v) -> false);
+
+        template.convertAndSend("/topic/echo","1");
+    }
+
+    public static void elliminate_unecho () {
+        if(template == null)
+            return;
+
+        boolean isChange = false;
+        for(Integer id: echoCheck.keySet()) {
+            if (!echoCheck.get(id)) {
+                isChange = true;
+                CityCrew disconnectedCrew = getCrewWith(id);
+
+                // Lazy Resignation
+                Upbeat.vacantTile.remove(disconnectedCrew.getCityCenter());
+                Upbeat.crews.remove(disconnectedCrew);
+                if (Upbeat.getGameState() == Upbeat.GameState.gameStart)
+                    Upbeat.losers.add(disconnectedCrew);
+
+                disconnectedCrew.setCityCenter(null);
+                for (Tile tile : disconnectedCrew.getOwnedTiles())
+                    tile.setOwner(null);
+                disconnectedCrew.getOwnedTiles().clear();
+
+                if (Upbeat.currentState.getCrew() == disconnectedCrew)
+                    Upbeat.currentState.incrementState();
+            }
+        }
+        if(isChange) {
+            template.convertAndSend("/topic/joinedUsers",Upbeat.crews);
+            template.convertAndSend("/topic/territory",Map.of("isOkay",true,"territory",Upbeat.game));
+            template.convertAndSend("/topic/state",Upbeat.currentState);
+        }
+        // What the fuck?
     }
 
     public static long get_rev_cost() { return rev_cost; }
